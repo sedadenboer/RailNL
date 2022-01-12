@@ -25,28 +25,34 @@ class Station:
 
   def __init__(self, connections, x_coord, y_coord):
 
-    # connections['connected station'] = duration
+    # dict formatted as connections['connected station'] = duration
     self.connections = connections
-    # x/y-coordinates of station
+
+    # x- and y-coordinates of station as floats
     self.x_coord = x_coord
     self.y_coord = y_coord
 
+
 def main():
 
-    # import data 
+    ###################################### 1. Import Data ######################################
+    # import data into pandas dataframe
     df_connections = pd.read_csv("Data_Holland/ConnectiesHolland.csv")
     df_stations = pd.read_csv("Data_Holland/StationsHolland.csv")
     
-    # list with objects of all stations of N/Z-holland
+    ################################ 2. Create Station Objects ##################################
+    # dict formatted as stations['name station'] = Station object
     stations = {}
 
+    # loop over all North- and South-Holland intercity stations
     for i_1 in df_stations.index:
+
         # retrieve initial station information
         name = df_stations['station'][i_1]
         x_coord = df_stations['x'][i_1]
         y_coord = df_stations['y'][i_1]
 
-        # find connections of station
+        # create dict of connections formatted as connections['connected station'] = duration
         connections = {}
         for i_2 in df_connections.index:
             if df_connections['station1'][i_2] == name:
@@ -54,46 +60,47 @@ def main():
             elif df_connections['station2'][i_2] == name:
                 connections[df_connections['station1'][i_2]] = df_connections['distance'][i_2]
 
-        # create station object and add to list
+        # create Station object and add to main dict
         station_object = Station(connections, x_coord, y_coord)
         stations[name] = station_object
     
-    # create scatterplot of train network N/S-holland 
+    ############################## 3. Visualization Railway Network ################################
+    # retrieve initial information of intercity stations
     x = df_stations['x']
     y = df_stations['y']
     z = df_stations['station']
+
+    # create scatterplot of based on x- and y-coord of stations
     plt.figure(figsize=(30, 20))
     plt.scatter(y, x, c = 'black', s = 15)
 
-    # add station name to each scatter point
+    # add station name to each scatter plot point
     for i, txt in enumerate(z):
         plt.annotate(txt, (y[i], x[i]), textcoords="offset points", xytext=(0, 10))
 
-    # add connections with line + duration
+    # plot all connections between stations 
     for i in df_connections.index:
 
-        # retrieve connections info from pandas dataframe
+        # retrieve initial information of all connections
         station1 = df_connections['station1'][i]
         station2 = df_connections['station2'][i]
         duration = df_connections['distance'][i]
 
-        # retrieve related objects 
+        # retrieve related Station objects of two stations
         station1_object = stations[station1]
         station2_object = stations[station2]
         
-        # plot connection plus durations
-        plt.plot([station1_object.y_coord, station2_object.y_coord], [station1_object.x_coord, station2_object.x_coord], c = 'black', alpha = 0.25)
-        plt.annotate(duration, 
-                    ((station1_object.y_coord + station2_object.y_coord)/2,(station1_object.x_coord + station2_object.x_coord)/2), 
-                    textcoords="offset points", 
-                    xytext=(0,10), 
-                    ha='center')
+        # plot connection between Stations
+        plt.plot([station1_object.y_coord, station2_object.y_coord], [station1_object.x_coord, station2_object.x_coord], 
+                 c = 'black', alpha = 0.25)
+        
+        # add duration of connection
+        plt.annotate(duration, ((station1_object.y_coord + station2_object.y_coord)/2,(station1_object.x_coord + station2_object.x_coord)/2), 
+                    textcoords="offset points", xytext=(0,10), ha='center')
 
-    # add titles
+    # add titles to plot of Railway Network and remove x- and y-tics
     plt.suptitle("Intercity connections North- and South-Holland", fontsize=25, y = 0.93)
     plt.title('Duration in minutes', fontsize=18, y = 1.01)
-
-    # remove x/y ticks
     plt.xticks([], [])
     plt.yticks([], [])
 
