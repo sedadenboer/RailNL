@@ -23,15 +23,30 @@ import matplotlib.pyplot as plt
 
 class Station:
 
-  def __init__(self, connections, x_coord, y_coord):
+    def __init__(self, name, connections, x_coord, y_coord):
 
-    # dict formatted as connections['connected station'] = duration
-    self.connections = connections
+        # name of stations
+        self.name = name
+        # dict formatted as connections['connected station'] = duration
+        self.connections = connections
+        # x- and y-coordinates of station as floats
+        self.x_coord = x_coord
+        self.y_coord = y_coord
 
-    # x- and y-coordinates of station as floats
-    self.x_coord = x_coord
-    self.y_coord = y_coord
 
+class Traject:
+
+    def __init__(self, stations, duration):
+        self.stations = stations
+        self.duration = duration
+    
+    def update_traject(self, new_station, extra_time):
+        if self.duration + extra_time < 120:
+            self.stations = self.stations.append(new_station)
+            self.duration = self.duration + extra_time
+            return True
+        else:
+            return False
 
 def main():
 
@@ -61,7 +76,7 @@ def main():
                 connections[df_connections['station1'][i_2]] = df_connections['distance'][i_2]
 
         # create Station object and add to main dict
-        station_object = Station(connections, x_coord, y_coord)
+        station_object = Station(name, connections, x_coord, y_coord)
         stations[name] = station_object
     
     ############################## 3. Visualization Railway Network ################################
@@ -106,6 +121,9 @@ def main():
 
     # save figure
     plt.savefig('Stations_Holland')
+
+    ############################## 4. Exercise 1.1 ################################
+
 
 if __name__ == "__main__":
     main()
