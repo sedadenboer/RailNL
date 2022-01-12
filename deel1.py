@@ -36,23 +36,10 @@ def main():
     # import data 
     df_connections = pd.read_csv("Data_Holland/ConnectiesHolland.csv")
     df_stations = pd.read_csv("Data_Holland/StationsHolland.csv")
-
-    # create plot of train network N/S-holland 
-    x = df_stations['x']
-    y = df_stations['y']
-    z = df_stations['station']
-    plt.figure(figsize=(30, 20))
-    plt.scatter(y, x, c = ['black'], s = 15)
-
-    for i, txt in enumerate(z):
-        plt.annotate(txt, (y[i], x[i]))
-
-    plt.title("Intercity connections North/South Holland", fontsize=25)
-    plt.savefig('Stations_Holland')
     
     # list with objects of all stations of N/Z-holland
-    stations = list()
-    
+    stations = {}
+
     for i_1 in df_stations.index:
         # retrieve initial station information
         name = df_stations['station'][i_1]
@@ -68,8 +55,47 @@ def main():
                 connections[df_connections['station1'][i_2]] = df_connections['distance'][i_2]
 
         # create station object and add to list
-        name = Station(connections, x_coord, y_coord)
-        stations.append(name)
+        station_object = Station(connections, x_coord, y_coord)
+        stations[name] = station_object
+    
+    # create scatterplot of train network N/S-holland 
+    x = df_stations['x']
+    y = df_stations['y']
+    z = df_stations['station']
+    plt.figure(figsize=(30, 20))
+    plt.scatter(y, x, c = 'black', s = 15)
+
+    # add station name to each scatter point
+    for i, txt in enumerate(z):
+        plt.annotate(txt, (y[i], x[i]), textcoords="offset points", xytext=(0,10))
+
+    # add connections with line + duration
+    for i in df_connections.index:
+
+        # retrieve connections info from pandas dataframe
+        station1 = df_connections['station1'][i]
+        station2 = df_connections['station2'][i]
+        duration = df_connections['distance'][i]
+
+        # retrieve related objects 
+        station1_object = stations[station1]
+        station2_object = stations[station2]
+        
+        # plot connection plus durations
+        plt.plot([station1_object.y_coord, station2_object.y_coord], [station1_object.x_coord, station2_object.x_coord], c = 'black')
+        plt.annotate(duration, 
+                    ((station1_object.y_coord + station2_object.y_coord)/2,(station1_object.x_coord + station2_object.x_coord)/2), 
+                    textcoords="offset points", 
+                    xytext=(0,10), 
+                    ha='center')
+
+    # add titles
+    plt.title("Intercity connections North/South Holland", fontsize=25)
+    plt.xlabel("y-coordinate", fontsize = 15)
+    plt.ylabel("x-coordinate", fontsize = 15)
+
+    # save figure
+    plt.savefig('Stations_Holland')
 
 if __name__ == "__main__":
     main()
