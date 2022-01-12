@@ -67,7 +67,7 @@ def main():
 
     # add station name to each scatter point
     for i, txt in enumerate(z):
-        plt.annotate(txt, (y[i], x[i]), textcoords="offset points", xytext=(0,10))
+        plt.annotate(txt, (y[i], x[i]), textcoords="offset points", xytext=(0, 10))
 
     # add connections with line + duration
     for i in df_connections.index:
@@ -82,7 +82,7 @@ def main():
         station2_object = stations[station2]
         
         # plot connection plus durations
-        plt.plot([station1_object.y_coord, station2_object.y_coord], [station1_object.x_coord, station2_object.x_coord], c = 'black')
+        plt.plot([station1_object.y_coord, station2_object.y_coord], [station1_object.x_coord, station2_object.x_coord], c = 'black', alpha = 0.25)
         plt.annotate(duration, 
                     ((station1_object.y_coord + station2_object.y_coord)/2,(station1_object.x_coord + station2_object.x_coord)/2), 
                     textcoords="offset points", 
@@ -90,9 +90,12 @@ def main():
                     ha='center')
 
     # add titles
-    plt.title("Intercity connections North/South Holland", fontsize=25)
-    plt.xlabel("y-coordinate", fontsize = 15)
-    plt.ylabel("x-coordinate", fontsize = 15)
+    plt.suptitle("Intercity connections North- and South-Holland", fontsize=25, y = 0.93)
+    plt.title('Duration in minutes', fontsize=18, y = 1.01)
+
+    # remove x/y ticks
+    plt.xticks([], [])
+    plt.yticks([], [])
 
     # save figure
     plt.savefig('Stations_Holland')
