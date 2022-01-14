@@ -20,12 +20,13 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import random
 
 class Station:
 
     def __init__(self, name, connections, x_coord, y_coord):
 
-        # name of stations
+        # name of station
         self.name = name
         # dict formatted as connections['connected station'] = duration
         self.connections = connections
@@ -42,11 +43,23 @@ class Traject:
     
     def update_traject(self, new_station, extra_time):
         if self.duration + extra_time < 120:
-            self.stations = self.stations.append(new_station)
+            self.stations = self.stations + [new_station]
             self.duration = self.duration + extra_time
             return True
         else:
             return False
+
+class Lijnvoering:
+
+    def __init__(self, verbindingen, trajecten):
+        self.verbindingen = verbindingen
+        self.trajecten = trajecten
+    
+    def add_traject(self, traject):
+        self.trajecten = self.trajecten + [traject]
+    
+    def add_verbinding(self, verbinding):
+        self.verbindingen = self.verbindingen + [verbinding]
 
 def main():
 
@@ -83,14 +96,14 @@ def main():
     # retrieve initial information of intercity stations
     x = df_stations['x']
     y = df_stations['y']
-    z = df_stations['station']
+    station_names = df_stations['station']
 
     # create scatterplot of based on x- and y-coord of stations
     plt.figure(figsize=(30, 20))
     plt.scatter(y, x, c = 'black', s = 15)
 
     # add station name to each scatter plot point
-    for i, txt in enumerate(z):
+    for i, txt in enumerate(station_names):
         plt.annotate(txt, (y[i], x[i]), textcoords="offset points", xytext=(0, 10))
 
     # plot all connections between stations 
@@ -123,6 +136,69 @@ def main():
     plt.savefig('Stations_Holland')
 
     ############################## 4. Exercise 1.1 ################################
+    
+    solution = False
+    while solution == False: 
+        
+        # create empty lijnvoering
+        lijnvoering_NL = Lijnvoering([], [])
+
+        # if not yet 7 trajects at lijnvoering
+        while len(lijnvoering_NL.trajecten) < 7:
+
+            print(len(lijnvoering_NL.trajecten))
+            # randomly chose start station, retrieve Station object and start traject
+            random_start = random.choice(station_names.tolist())
+            cur_station = stations[random_start]
+            new_traject = Traject([random_start], 0)
+
+            while True:
+                print("current trajectory:", new_traject.stations)
+                print("current duration of trajectory (min):", new_traject.duration)
+                print("bereden verbindingen (lijnvoering):", set(lijnvoering_NL.verbindingen))
+
+                # find new part of traject
+                connected_station, duration = random.choice(list(cur_station.connections.items()))
+                connection_number = (df_connections[(df_connections['station1']  == cur_station.name) & (df_connections['station2'] == connected_station)].index.tolist() + 
+                                    df_connections[(df_connections['station2']  == cur_station.name) & (df_connections['station1'] == connected_station)].index.tolist())[0]
+                print("potentieel nieuw station:", connected_station)
+
+                # if station already passed try another connection
+                ## PROBLEM 1: bijv. als die bij Den Helder is kan die alleen maar terug naar Alkmaar
+                ## PROBLEM 2: zelfde probleem als je bijv. ['Heemstede-Aerdenhout', 'Leiden Centraal', 'Den Haag Centraal', 'Gouda', 'Alphen a/d Rijn']
+                # if connection with station that is not yet in traject is possible 
+                if all(item in new_traject.stations for item in cur_station.connections.keys()) == False:
+                    while (connected_station in new_traject.stations):
+                        print('current trajectory:', new_traject.stations)
+                        print('try to find new station from:', cur_station.connections)
+                        connected_station, duration = random.choice(list(cur_station.connections.items()))
+                        print("potentieel nieuw station:", connected_station)
+                        connection_number = (df_connections[(df_connections['station1']  == cur_station.name) & (df_connections['station2'] == connected_station)].index.tolist() + 
+                                        df_connections[(df_connections['station2']  == cur_station.name) & (df_connections['station1'] == connected_station)].index.tolist())[0]
+                
+                print(" ")
+                # if final connection chosen, update traject and lijnvoering
+                cur_station = stations[connected_station]
+                if new_traject.update_traject(connected_station, duration) == True:
+                    lijnvoering_NL.add_verbinding(connection_number)
+                else:
+                    break
+            
+            lijnvoering_NL.add_traject(new_traject)
+
+            if set(range(0, 28)) == set(lijnvoering_NL.verbindingen):
+                break
+
+        if set(range(0, 28)) == set(lijnvoering_NL.verbindingen):
+            solution == True
+            print('found a solution/correct lijnvoering')
+        else: 
+            solution == False
+            print('did not find a correct lijnvoering/solution')
+            print(set(lijnvoering_NL.verbindingen))
+            
+    print(lijnvoering_NL.trajecten)
+
 
 
 if __name__ == "__main__":
