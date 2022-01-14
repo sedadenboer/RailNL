@@ -8,17 +8,17 @@ The former can be done with the help of the following equation:
 
 `K = p * 1000 = (T * 100 + Min)`
 
-K = quality of the line management
+`K` = quality of the line management
 
-p = fraction of the ridden connections (number between 0 and 1)
+`p` = fraction of the ridden connections (number between 0 and 1)
 
-T = the number of trajectories
+`T` = the number of trajectories
 
-Min = the number of minutes of all the trajectories taken together
+`Min` = the number of minutes of all the trajectories taken together
 
 
 ## North- and South-Holland
-For this assignment 
+For this assignment a line management solution has to be found for North- and South-Holland with max. 7 trajectories within a timeframe of 2 hours, and all connections have to be ridden. After this is done, this has to be done again but with the goal to optimize `K` for it to be as high as possible. In this case not all connections have to be ridden.
 
 ### Algorithm
 
@@ -29,4 +29,4 @@ For this assignment
 ## Authors
 * [@sedadenboer](https://www.github.com/sedadenboer)
 * [@evapots](https://github.com/evapots)
-* [@Thijmen1411] (https://github.com/Thijmen1411)
+* [@Thijmen1411](https://github.com/Thijmen1411)
