@@ -199,7 +199,6 @@ def main():
             
     print(lijnvoering_NL.trajecten)
 
-# Test Thijmen
 
 if __name__ == "__main__":
     main()
