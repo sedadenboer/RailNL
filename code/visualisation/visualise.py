@@ -4,7 +4,8 @@ def visualise_start(railway_map):
     """
     Visualisation code that displays the railnetwork of the selected area
     """
-    print("Loading visualisation...")
+    print("Loading main visualisation...")
+    print()
     
     # load station information
     x = []
@@ -51,7 +52,13 @@ def visualise_start(railway_map):
 
 
 def visualise_solution(final_graph):
+    """
+    Visualisation code that displays the found 'lijnvoering'
+    """
+    print("Loading solution visualisation...")
+    print()
 
+    # select colors for trajects
     colors = ['red', 'green', 'blue', 'purple', 'orange', 'blue', 'pink']
 
     # load station information
@@ -63,48 +70,46 @@ def visualise_solution(final_graph):
         y.append(float(station.y_coord))
         z.append(station.name)
 
+    # determine height of figure based on number of trajects
     if len(final_graph.lijnvoering) > 6:
         fig = plt.figure(figsize=(70, 70))
     else:
         fig = plt.figure(figsize=(70, 40))
 
+    # create subplot for each traject
     n_trajects = 1
     fig.subplots_adjust(hspace=0.4, wspace=0.2)
 
     for traject in final_graph.lijnvoering:
+        
+        # determine dimensions of figure based on number of trajects
         if len(final_graph.lijnvoering) > 6:
             ax = fig.add_subplot(3, 3, n_trajects)
         else:
             ax = fig.add_subplot(2, 3, n_trajects)
-        n_trajects += 1
 
-        # create rail network with station names 
+        # update total number of trajects and set title to subplot
+        n_trajects += 1
+        ax.set_title(f'Traject {n_trajects - 1}: {traject.stations[0]} --> {traject.stations[-1]} ({traject.duration} min.)', fontsize=25)
+
+        # create main rail network with station names 
         ax.scatter(y, x, c = 'black', s = 15)
         for i, txt in enumerate(z):
             ax.annotate(txt, (y[i], x[i]), textcoords="offset points", xytext=(0, 10))
 
-        # plot all connections between stations 
-        for connection in set(final_graph.used_connections):
-
-            # retrieve initial information of all connections
+        # plot all connections between stations including the duration
+        for connection in set(final_graph.available_connections):
             station1 = final_graph.stations[connection.stations[0]]
             x1 = float(station1.x_coord)
             y1 = float(station1.y_coord)
             station2 = final_graph.stations[connection.stations[1]]
             x2 = float(station2.x_coord)
             y2 = float(station2.y_coord)
-
-            # plot connection between Stations
             ax.plot([y1, y2], [x1, x2], c = 'black', alpha = 0.20)
-            # add duration of connection
             ax.annotate(connection.duration, ((y1 + y2) / 2,(x1 + x2) / 2), textcoords="offset points", xytext=(0,10), ha='center')
 
-
-        # add traject
-        ax.set_title(f'Traject {n_trajects - 1}: {traject.stations[0]} --> {traject.stations[-1]} ({traject.duration} min.)', fontsize=25)
+        # plot all connections in the traject 
         for connection in traject.connections:
-
-            # plot connection between Stations
             station1 = final_graph.stations[connection.stations[0]]
             x1 = float(station1.x_coord)
             y1 = float(station1.y_coord)

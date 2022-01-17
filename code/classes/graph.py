@@ -1,19 +1,17 @@
 import csv
 
-
 from .station import Station
 from .connection import Connection
+
 
 class Graph():
     def __init__(self, source_map):
         self.stations = self.load_stations(source_map)
         self.available_connections = []
         self.load_connections(source_map)
-
-        self.lijnvoering = []
-
         self.used_connections = []
         self.unused_connections = set(self.available_connections) - set(self.used_connections)
+        self.lijnvoering = []
 
     def load_stations(self, source_map):
         """
@@ -23,7 +21,6 @@ class Graph():
         source_file = f"data/{source_map}/Stations{source_map}.csv"
         with open(source_file, 'r') as in_file:
             reader = csv.DictReader(in_file)
-
             for row in reader:
                 stations[row['station']] = Station(row['station'], row['x'], row['y'])
 
@@ -37,7 +34,6 @@ class Graph():
         id = 0
         with open(source_file, 'r') as in_file:
             reader = csv.DictReader(in_file)
-
             for row in reader:
                 id += 1
                 connection = Connection(id, row['station1'], row['station2'], row['distance'])
@@ -46,8 +42,14 @@ class Graph():
                 self.stations[row['station2']].add_connection(connection, row['station1'])
 
     def add_connection(self, connection):
+        """
+        Update connections used and not-used based on added connection.
+        """
         self.used_connections = self.used_connections + [connection]
         self.unused_connections = set(self.available_connections) - set(self.used_connections)
     
     def add_traject(self, traject):
+        """
+        Add traject object to lijnvoering.
+        """
         self.lijnvoering = self.lijnvoering + [traject]

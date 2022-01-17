@@ -9,9 +9,6 @@ if __name__ == '__main__':
 
     # Create a graph from datafile
     railway_map = graph.Graph(map_name)
-    # print(railway_map.stations['Alkmaar'].connections)
-    # print(railway_map.available_connections)
-    # print(railway_map.lijnvoering)
 
     #---------------------------- Visualisation Start--------------------------
     vis.visualise_start(railway_map)
