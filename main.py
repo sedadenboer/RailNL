@@ -20,22 +20,20 @@ def main():
     else: 
         sys.exit("Not a valid input")
 
-    #------------------------- Load Graph based on region ----------------------
+    #------------------------------ Load Graph based on region --------------------------
     railway_map = graph.Graph(map_name, max_trajects, max_duration)
 
-    #---------------------------- Visualisation Start--------------------------
+    #---------------------------------- Visualisation Start------------------------------
     vis.visualise_start(railway_map, map_name)
 
-    #---------------------------- Random assignment --------------------------
-    random_graph = randomise.random_algorithm(railway_map)
+    #------------------------------------ Start algorithm ------------------------------
+    if map_name == 'HOLLAND':
+        if question == 1:
+            random_graph = randomise.random_algorithm(railway_map)
+    
+
+    #---------------------------- Display visualisation results --------------------------
     vis.visualise_solution(random_graph, map_name)
-
-    #---------------------------- Random Greedy reassignment --------------------------
-   
-
-   
-
-    # vis.visualise_result(random_lijnvoering, f"data/{map_name}/{map_name}_regions.geojson")
 
 
 if __name__ == '__main__':
