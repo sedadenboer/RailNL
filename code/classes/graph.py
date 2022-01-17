@@ -3,7 +3,6 @@ import csv
 
 from .station import Station
 from .connection import Connection
-from .lijnvoering import Lijnvoering
 
 class Graph():
     def __init__(self, source_map):
