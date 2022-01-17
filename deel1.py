@@ -192,12 +192,7 @@
 
 
 
-<<<<<<< HEAD
 
 # if __name__ == "__main__":
 #     main()
-=======
-if __name__ == "__main__":
-    main()
->>>>>>> fd1e9a88e68f329bb0105b6083811bec798afcb6
 

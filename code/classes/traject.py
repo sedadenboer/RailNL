@@ -5,12 +5,12 @@ class Traject:
         self.duration = duration
         self.connections = connections
     
-    def update_traject(self, new_station, extra_time, connection):
+    def update_traject(self, new_station, extra_time, connection, max_duration):
         """
         Add connection to traject if possible within time constraint.
         Return boolean to indicate whether succeeded or not.
         """
-        if self.duration + extra_time < 120:
+        if self.duration + extra_time < max_duration:
             self.stations = self.stations + [new_station]
             self.duration = self.duration + extra_time
             self.connections = self.connections + [connection]

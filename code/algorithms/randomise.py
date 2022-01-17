@@ -17,7 +17,7 @@ def random_traject(graph):
     chosen_connection = random.choice(list(graph.unused_connections))
     [station1, station2] = chosen_connection.stations
     duration = chosen_connection.duration
-    new_traject = Traject([station1, station2], int(duration), [chosen_connection])
+    new_traject = Traject([station1, station2], int(float(duration)), [chosen_connection])
     graph.add_connection(chosen_connection)
     cur_station = graph.stations[station2]
 
@@ -47,7 +47,7 @@ def random_traject(graph):
                 
         # add connections to traject if within time constraint
         cur_station = graph.stations[connected_station]
-        if new_traject.update_traject(connected_station, int(duration), connection) == True:
+        if new_traject.update_traject(connected_station, int(float(duration)), connection, graph.max_duration) == True:
             graph.add_connection(connection)
         else:
             traject_not_finished = False
@@ -73,8 +73,8 @@ def random_algorithm(graph):
         nTry += 1
         new_graph = copy.deepcopy(graph)
         
-        # if not yet 7 trajects and solution not found, add new traject to lijnvoering 
-        while len(new_graph.unused_connections) != 0 and len(new_graph.lijnvoering) < 7:
+        # if not yet max. trajects and solution not found, add new traject to lijnvoering 
+        while len(new_graph.unused_connections) != 0 and len(new_graph.lijnvoering) < new_graph.max_trajects:
             random_traject(new_graph)
 
         # if all connections used, print solution and stop loop

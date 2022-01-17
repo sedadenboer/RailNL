@@ -5,10 +5,12 @@ from .connection import Connection
 
 
 class Graph():
-    def __init__(self, source_map):
+    def __init__(self, source_map, max_trajects, max_duration):
         self.stations = self.load_stations(source_map)
         self.available_connections = []
         self.load_connections(source_map)
+        self.max_trajects = max_trajects
+        self.max_duration = max_duration
         self.used_connections = []
         self.unused_connections = set(self.available_connections) - set(self.used_connections)
         self.lijnvoering = []
