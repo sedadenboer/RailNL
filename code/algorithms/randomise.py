@@ -6,7 +6,7 @@ import copy
 
 def random_traject(graph):
     """
-    Create new traject of < 120 min based on the following algorithm:
+    Create new traject based on the following algorithm:
     - 1st connection of traject is chosen from unused connections @ lijnvoering 
     - at each junction, new connection is chosen from unused connections @ lijnvoering 
       if not possible, non-unique connection is chosen
@@ -56,10 +56,43 @@ def random_traject(graph):
     graph.add_traject(new_traject)
     
 
-def random_algorithm(graph):
+def random_algorithm_one_sol(graph):
     """
-    Algorithm that looks for combination of trajects (max. 7 trajects of < 120min)
-    such that all connections of the railnetwork are used.
+    Algorithm that looks for combination of trajects such that all connections are used
+    """
+    print('loading randomly constructed lijnvoering...')
+    print()
+
+    solution = False
+    nTry = 0 
+
+    while solution == False:
+
+        # for each try, create a new graph 
+        nTry += 1
+        new_graph = copy.deepcopy(graph)
+        
+        # if not yet max. trajects and solution not found, add new traject to lijnvoering 
+        while len(new_graph.unused_connections) != 0 and len(new_graph.lijnvoering) < new_graph.max_trajects:
+            random_traject(new_graph)
+
+        # if all connections used, print solution and stop loop
+        if len(new_graph.unused_connections) == 0:
+            solution = True
+            
+            print('Found the following correct lijnvoering at try number:', nTry)
+            for i, traject in enumerate(new_graph.lijnvoering):
+                print('traject', i + 1,':', traject.stations)
+                print('duration:', traject.duration)
+                print('connections', traject.connections)
+                print()
+    
+    return new_graph
+
+
+def random_algorithm_opt_sol(graph):
+    """
+    Algorithm that looks for combination of trajects such that quality goal-fucntion is optimized
     """
     print('loading randomly constructed lijnvoering...')
     print()
