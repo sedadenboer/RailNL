@@ -97,10 +97,11 @@ def random_algorithm_opt_sol(graph):
     print('loading randomly constructed lijnvoering...')
     print()
 
-    solution = False
-    nTry = 0 
+    opt_K = 0
+    opt_map = graph
+    nTry = 0
 
-    while solution == False:
+    while nTry < 2:
 
         # for each try, create a new graph 
         nTry += 1
@@ -110,18 +111,23 @@ def random_algorithm_opt_sol(graph):
         while len(new_graph.unused_connections) != 0 and len(new_graph.lijnvoering) < new_graph.max_trajects:
             random_traject(new_graph)
 
-        # if all connections used, print solution and stop loop
-        if len(new_graph.unused_connections) == 0:
-            solution = True
+        # kwaliteit doelfunctie
+        Min = 0
+        T = 0
+        p = len(new_graph.lijnvoering.used_connections) / len(new_graph.lijnvoering.available_connections)
+        for traject in new_graph.lijnvoering:
+                Min = Min + traject.duration
+                T += 1
+
+        new_K = p*10000 - (T*100 + Min)
+        
+
+        if new_K > opt_K:
+            opt_k = new_K
+            opt_map = new_graph
             
-            print('Found the following correct lijnvoering at try number:', nTry)
-            for i, traject in enumerate(new_graph.lijnvoering):
-                print('traject', i + 1,':', traject.stations)
-                print('duration:', traject.duration)
-                print('connections', traject.connections)
-                print()
     
-    return new_graph
+    return opt_map, opt_K
 
 
 

@@ -33,7 +33,11 @@ def main():
         if map_name == 'HOLLAND' and question == 1:
             random_graph = randomise.random_algorithm_one_sol(railway_map)
         else:
-            random_graph = randomise.random_algorithm_opt_sol(railway_map)
+            opt_random_graph, K = randomise.random_algorithm_opt_sol(railway_map)
+            print("found optimal K of:", K)
+            for traject in opt_random_graph.lijnvoering:
+                print(traject.stations)
+
     else: 
         sys.exit("Algorithm not yet implemented")
 
