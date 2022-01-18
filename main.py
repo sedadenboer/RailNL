@@ -5,6 +5,7 @@ from code.algorithms import randomise
 from code.algorithms import greedy as gr
 from code.visualisation import visualise as vis
 
+
 def main():
 
     #------------------------------ Request & Implement user input -------------------------------
@@ -36,6 +37,10 @@ def main():
             random_graph = randomise.random_algorithm_opt_sol(railway_map)
     else: 
         sys.exit("Algorithm not yet implemented")
+    
+    # calculate the quality of the lijnvoering and print the result
+    random_graph.lijnvoering_kwaliteit(set(random_graph.used_connections), random_graph.available_connections, random_graph.lijnvoering)
+    print('K = ', random_graph.K)
 
     #---------------------------- Display visualisation results ------------------------------------
     vis.visualise_solution(random_graph, map_name)

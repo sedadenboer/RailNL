@@ -2,6 +2,7 @@ import csv
 
 from .station import Station
 from .connection import Connection
+from .traject import Traject
 
 
 class Graph():
@@ -14,6 +15,7 @@ class Graph():
         self.used_connections = []
         self.unused_connections = set(self.available_connections) - set(self.used_connections)
         self.lijnvoering = []
+        self.K = 0
 
     def load_stations(self, source_map):
         """
@@ -55,3 +57,19 @@ class Graph():
         Add traject object to lijnvoering.
         """
         self.lijnvoering = self.lijnvoering + [traject]
+    
+    def lijnvoering_kwaliteit(self, used_connections, all_connections, lijnvoering):
+        """
+        Calculate the quality of the lijnvoering.
+        """
+        # fraction of ridden connections
+        p = len(used_connections) / len(all_connections)
+        # number of trajectories
+        T = len(lijnvoering)
+        # number of minutes of all trajectories together
+        Min = 0
+        for traject in lijnvoering:
+            Min += traject.duration
+
+        # calculate K
+        self.K = p * 10000 - (T * 100 + Min)
