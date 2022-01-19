@@ -84,7 +84,7 @@ def random_algorithm_one_sol(graph):
                 print('traject', i + 1,':', traject.stations)
                 print('duration:', traject.duration)
                 print('connections', traject.connections)
-                print()
+
     
     return new_graph
 
@@ -99,7 +99,7 @@ def random_algorithm_opt_sol(graph):
     opt_map = graph
     nTry = 0
 
-    while nTry < 100000:
+    while nTry < 100:
 
         # for each try, create a new graph 
         nTry += 1
