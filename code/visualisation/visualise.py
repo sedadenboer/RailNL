@@ -4,6 +4,7 @@ def visualise_start(railway_map, map_name):
     """
     Visualisation code that displays the railnetwork of the selected area
     """
+    print()
     print("Loading main visualisation...")
     print()
     

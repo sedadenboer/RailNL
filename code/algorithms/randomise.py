@@ -101,7 +101,7 @@ def random_algorithm_opt_sol(graph):
     opt_map = graph
     nTry = 0
 
-    while nTry < 2:
+    while nTry < 10000:
 
         # for each try, create a new graph 
         nTry += 1
@@ -111,22 +111,20 @@ def random_algorithm_opt_sol(graph):
         while len(new_graph.unused_connections) != 0 and len(new_graph.lijnvoering) < new_graph.max_trajects:
             random_traject(new_graph)
 
-        # kwaliteit doelfunctie
+        # calculate quality-goalfunction
         Min = 0
         T = 0
-        p = len(new_graph.lijnvoering.used_connections) / len(new_graph.lijnvoering.available_connections)
+        p = len(set(new_graph.used_connections)) / len(new_graph.available_connections)
         for traject in new_graph.lijnvoering:
-                Min = Min + traject.duration
+                Min += traject.duration
                 T += 1
-
         new_K = p*10000 - (T*100 + Min)
         
-
+        # if quality higher then optimal, replace optimal
         if new_K > opt_K:
-            opt_k = new_K
+            opt_K = new_K
             opt_map = new_graph
             
-    
     return opt_map, opt_K
 
 

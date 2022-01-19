@@ -31,18 +31,17 @@ def main():
     #------------------------------------ Start algorithm ----------------------------------------
     if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
         if map_name == 'HOLLAND' and question == 1:
-            random_graph = randomise.random_algorithm_one_sol(railway_map)
+            final_graph = randomise.random_algorithm_one_sol(railway_map)
         else:
-            opt_random_graph, K = randomise.random_algorithm_opt_sol(railway_map)
+            final_graph, K = randomise.random_algorithm_opt_sol(railway_map)
             print("found optimal K of:", K)
-            for traject in opt_random_graph.lijnvoering:
+            for traject in final_graph.lijnvoering:
                 print(traject.stations)
-
     else: 
         sys.exit("Algorithm not yet implemented")
 
     #---------------------------- Display visualisation results ------------------------------------
-    vis.visualise_solution(random_graph, map_name)
+    vis.visualise_solution(final_graph, map_name)
 
 
 if __name__ == '__main__':
