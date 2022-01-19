@@ -35,10 +35,13 @@ def main():
         if map_name == 'HOLLAND' and question == 1:
             final_graph = randomise.random_algorithm_one_sol(railway_map)
         else:
-            final_graph, K = randomise.random_algorithm_opt_sol(railway_map)
+            final_graph, K, all_K, dict_K = randomise.random_algorithm_opt_sol(railway_map)
             print("Found optimal K of:", K)
             for traject in final_graph.lijnvoering:
                 print("Traject", final_graph.lijnvoering.index(traject), "\n", ", ".join(traject.stations))
+            # make visualtion of all K generated
+            vis.visualise_steekproef(all_K)
+            vis.visualise_steekproef_by_trajects(dict_K)
 
     else: 
         sys.exit("Algorithm not yet implemented")

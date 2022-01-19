@@ -99,7 +99,10 @@ def random_algorithm_opt_sol(graph):
     opt_map = graph
     nTry = 0
 
-    while nTry < 100:
+    all_K = []
+    dict_K = dict()
+
+    while nTry < 10000:
 
         # for each try, create a new graph 
         nTry += 1
@@ -116,8 +119,15 @@ def random_algorithm_opt_sol(graph):
         if new_graph.K > opt_K:
             opt_K = new_graph.K
             opt_map = new_graph
+        
+        # steekproef variables
+        all_K.append(new_graph.K)
+        if len(new_graph.lijnvoering) in dict_K.keys():
+            dict_K[len(new_graph.lijnvoering)].append(new_graph.K)
+        else:
+            dict_K[len(new_graph.lijnvoering)] = [new_graph.K]
             
-    return opt_map, opt_K
+    return opt_map, opt_K, all_K, dict_K
 
 
 
