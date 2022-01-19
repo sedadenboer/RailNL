@@ -23,27 +23,27 @@ def main():
     else: 
         sys.exit("Not a valid input")
 
-    #------------------------------ Load Graph based on region ------------------------------------
+    #----------------------------------- Load Graph based on region ------------------------------------
     railway_map = graph.Graph(map_name, max_trajects, max_duration)
 
-    #---------------------------------- Visualisation Start----------------------------------------
+    #--------------------------------------- Visualisation Start----------------------------------------
     vis.visualise_start(railway_map, map_name)
 
-    #------------------------------------ Start algorithm ----------------------------------------
+    #--------------------------------------- Implement Algorithm ----------------------------------------
     if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
         if map_name == 'HOLLAND' and question == 1:
-            random_graph = randomise.random_algorithm_one_sol(railway_map)
+            final_graph = randomise.random_algorithm_one_sol(railway_map)
         else:
-            random_graph = randomise.random_algorithm_opt_sol(railway_map)
+            final_graph, K = randomise.random_algorithm_opt_sol(railway_map)
+            print("Found optimal K of:", K)
+            for traject in final_graph.lijnvoering:
+                print("Traject", final_graph.lijnvoering.index(traject), "\n", ", ".join(traject.stations))
+
     else: 
         sys.exit("Algorithm not yet implemented")
-    
-    # calculate the quality of the lijnvoering and print the result
-    random_graph.lijnvoering_kwaliteit(set(random_graph.used_connections), random_graph.available_connections, random_graph.lijnvoering)
-    print('K = ', random_graph.K)
 
-    #---------------------------- Display visualisation results ------------------------------------
-    vis.visualise_solution(random_graph, map_name)
+    #-------------------------------------- Visualisation Result -----------------------------------------
+    vis.visualise_solution(final_graph, map_name)
 
 
 if __name__ == '__main__':

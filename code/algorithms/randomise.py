@@ -60,8 +60,7 @@ def random_algorithm_one_sol(graph):
     """
     Algorithm that looks for combination of trajects such that all connections are used
     """
-    print('loading randomly constructed lijnvoering...')
-    print()
+    print('\nloading randomly constructed lijnvoering...\n')
 
     solution = False
     nTry = 0 
@@ -94,13 +93,13 @@ def random_algorithm_opt_sol(graph):
     """
     Algorithm that looks for combination of trajects such that quality goal-fucntion is optimized
     """
-    print('loading randomly constructed lijnvoering...')
-    print()
+    print('\nloading randomly constructed lijnvoering...\n')
 
-    solution = False
-    nTry = 0 
+    opt_K = 0
+    opt_map = graph
+    nTry = 0
 
-    while solution == False:
+    while nTry < 100000:
 
         # for each try, create a new graph 
         nTry += 1
@@ -110,18 +109,15 @@ def random_algorithm_opt_sol(graph):
         while len(new_graph.unused_connections) != 0 and len(new_graph.lijnvoering) < new_graph.max_trajects:
             random_traject(new_graph)
 
-        # if all connections used, print solution and stop loop
-        if len(new_graph.unused_connections) == 0:
-            solution = True
+        # add quality-goalfunction
+        new_graph.lijnvoering_kwaliteit(set(new_graph.used_connections), new_graph.available_connections, new_graph.lijnvoering)
+        
+        # if quality higher then optimal, replace optimal results
+        if new_graph.K > opt_K:
+            opt_K = new_graph.K
+            opt_map = new_graph
             
-            print('Found the following correct lijnvoering at try number:', nTry)
-            for i, traject in enumerate(new_graph.lijnvoering):
-                print('traject', i + 1,':', traject.stations)
-                print('duration:', traject.duration)
-                print('connections', traject.connections)
-                print()
-    
-    return new_graph
+    return opt_map, opt_K
 
 
 

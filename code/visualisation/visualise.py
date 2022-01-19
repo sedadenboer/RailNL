@@ -4,8 +4,7 @@ def visualise_start(railway_map, map_name):
     """
     Visualisation code that displays the railnetwork of the selected area
     """
-    print("Loading main visualisation...")
-    print()
+    print("\nLoading main visualisation...\n")
     
     # load station information
     x = []
@@ -55,8 +54,8 @@ def visualise_solution(final_graph, map_name):
     """
     Visualisation code that displays the found 'lijnvoering'
     """
-    print("Loading solution visualisation...")
-    print()
+    print("\nLoading solution visualisation...\n")
+
 
     # select colors for trajects
     colors = []
