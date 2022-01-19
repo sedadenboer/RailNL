@@ -32,7 +32,7 @@ def main():
 
     #--------------------------------------- Implement Algorithm ----------------------------------------
     if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
-        if map_name == 'Holland' and question == 1:
+        if map_name == 'Holland' and question == '1':
             final_graph = randomise.random_algorithm_one_sol(railway_map)
         else:
             final_graph, K, all_K, dict_K = randomise.random_algorithm_opt_sol(railway_map)
