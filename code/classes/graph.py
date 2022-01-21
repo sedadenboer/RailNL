@@ -3,6 +3,7 @@ import csv
 from .station import Station
 from .connection import Connection
 from .traject import Traject
+from .lijnvoering import Lijnvoering
 
 
 class Graph():
@@ -14,8 +15,12 @@ class Graph():
         self.max_duration = max_duration
         self.used_connections = []
         self.unused_connections = set(self.available_connections) - set(self.used_connections)
-        self.lijnvoering = []
+        self.lijnvoering = Lijnvoering()
         self.K = 0
+    
+
+    def __eq__(self, other):
+        return self.age == other.age
 
     def load_stations(self, source_map):
         """
@@ -51,12 +56,6 @@ class Graph():
         """
         self.used_connections = self.used_connections + [connection]
         self.unused_connections = set(self.available_connections) - set(self.used_connections)
-    
-    def add_traject(self, traject):
-        """
-        Add traject object to lijnvoering.
-        """
-        self.lijnvoering = self.lijnvoering + [traject]
     
     def lijnvoering_kwaliteit(self, used_connections, all_connections, lijnvoering):
         """

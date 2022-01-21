@@ -17,3 +17,14 @@ class Traject:
             return True
         else:
             return False
+    
+    def __eq__(self, other):
+
+        # two trajects are equal if they contain connections in the same order
+        if self.connections == other.connections:
+            return True
+        # or if one traject is the reverse of the other traject
+        elif list(reversed(self.connections)) == other.connections:
+            return True
+        else:
+            return False

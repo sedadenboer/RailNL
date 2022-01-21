@@ -5,6 +5,7 @@ from code.classes import graph
 from code.algorithms import randomise
 from code.algorithms import greedy as gr
 from code.visualisation import visualise as vis
+from code.other import calculate_statespace as css
 
 
 def main():
@@ -27,18 +28,26 @@ def main():
     #----------------------------------- Load Graph based on region ------------------------------------
     railway_map = graph.Graph(map_name, max_trajects, max_duration)
 
+    #----------------------------------- Calculate statespace ------------------------------------
+    # state_space = css.state_space_cal(railway_map)
+    # print(state_space)
+
     #--------------------------------------- Visualisation Start----------------------------------------
     vis.visualise_start(railway_map, map_name)
 
     #--------------------------------------- Implement Algorithm ----------------------------------------
     if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
-        if map_name == 'HOLLAND' and question == 1:
+        if map_name == 'Holland' and question == '1':
             final_graph = randomise.random_algorithm_one_sol(railway_map)
         else:
+            # final_graph = randomise.random_algorithm_unique_sols(railway_map)
             final_graph, K, all_K, dict_K = randomise.random_algorithm_opt_sol(railway_map)
+            
+            # print soluation
             print("Found optimal K of:", K)
-            for traject in final_graph.lijnvoering:
-                print("Traject", final_graph.lijnvoering.index(traject), "\n", ", ".join(traject.stations))
+            for traject in final_graph.lijnvoering.trajecten:
+                print("Traject", final_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
+            
             # make visualtion of all K generated
             vis.visualise_steekproef(all_K)
             vis.visualise_steekproef_by_trajects(dict_K)
@@ -58,8 +67,8 @@ def main():
         writer.writerow(['train', 'stations'])
 
         # write the data
-        for traject in final_graph.lijnvoering:
-            writer.writerow([f'train_{final_graph.lijnvoering.index(traject)+1}', str(traject.stations).translate({39: None})])
+        for traject in final_graph.lijnvoering.trajecten:
+            writer.writerow([f'train_{final_graph.lijnvoering.trajecten.index(traject)+1}', str(traject.stations).translate({39: None})])
         
         # write the footer
         writer.writerow(['score', final_graph.K])

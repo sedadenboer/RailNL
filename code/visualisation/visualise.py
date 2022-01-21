@@ -74,7 +74,7 @@ def visualise_solution(final_graph, map_name):
         z.append(station.name)
 
     # determine height of figure based on number of trajects
-    if len(final_graph.lijnvoering) > 6:
+    if len(final_graph.lijnvoering.trajecten) > 6:
         fig = plt.figure(figsize=(70, 70))
     else:
         fig = plt.figure(figsize=(70, 40))
@@ -83,12 +83,12 @@ def visualise_solution(final_graph, map_name):
     n_trajects = 1
     fig.subplots_adjust(hspace=0.4, wspace=0.2)
 
-    for traject in final_graph.lijnvoering:
+    for traject in final_graph.lijnvoering.trajecten:
         
         # determine dimensions of figure based on number of trajects
-        if len(final_graph.lijnvoering) > 9:
+        if len(final_graph.lijnvoering.trajecten) > 9:
             ax = fig.add_subplot(5, 4, n_trajects)
-        elif len(final_graph.lijnvoering) > 6 and len(final_graph.lijnvoering) < 10:
+        elif len(final_graph.lijnvoering.trajecten) > 6 and len(final_graph.lijnvoering.trajecten) < 10:
             ax = fig.add_subplot(3, 3, n_trajects)
         else:
             ax = fig.add_subplot(2, 3, n_trajects)
