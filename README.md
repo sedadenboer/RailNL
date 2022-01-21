@@ -21,7 +21,7 @@ The former can be done with the help of the following equation:
 For this assignment a line management solution has to be found for North- and South-Holland with max. 7 trajectories within a timeframe of 2 hours, and all connections have to be ridden. After this is done, this has to be done again but with the goal to optimize `K` for it to be as high as possible. In this case not all connections have to be ridden.
 
 ### State space
-The state space of a problem is equal to the number of unique solutions. The following formula is used to calculate the state space: $\frac{n!}{r!(n-r)!}$, where in this problem r equals to the number of trajectories allowed and n equals to the number of unique trajectories. For the North- and South-Holland case, r = 7 and n = 10835519. Entering in these values into the formula, will give a state space in the order of $10^10^8.16$. Because of the enormous size of the state space, the following restrictions are set to decrease this number:
+The state space of a problem is equal to the number of unique solutions. The following formula is used to calculate the state space: `(n!)/(r!(n-r)!)`, where in this problem r equals to the number of trajectories allowed and n equals to the number of unique trajectories. For the North- and South-Holland case, `r` = 7 and `n` = 10835519. Entering in these values into the formula, will give a state space in the order of 10^10^8.16. Because of the enormous size of the state space, the following restrictions are set to decrease this number:
 - Teleportations are not allowed; a train has to continue from the last destination.
 - A trajectory can't go over a connection or station more than once.
 - A trajectory has to start at a connection that has not been used before in the line.
