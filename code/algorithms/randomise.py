@@ -1,5 +1,4 @@
 from code.classes.traject import Traject
-from code.classes.lijnvoering import Lijnvoering
 
 import random
 import copy
@@ -67,101 +66,76 @@ def random_algorithm_unique_sols(graph):
     """
     ...
     """
-    print('\nloading randomly constructed lijnvoering...\n')
-
-    ######################### check that comparison lijnvoering works ###############################
-    # # traject 1
-    # [station1, station2] = graph.available_connections[1].stations
-    # duration = graph.available_connections[1].duration
-    # traject1 = Traject([station1, station2, 'maastricht'], int(float(duration)), [graph.available_connections[1], graph.available_connections[2]])
-
-    # # traject 2
-    # [station1, station2] = graph.available_connections[15].stations
-    # duration = graph.available_connections[15].duration
-    # traject2 = Traject([station1, station2, 'maastricht'], int(float(duration)), [graph.available_connections[15], graph.available_connections[2]])
-
-    # # traject 3
-    # [station1, station2] = graph.available_connections[15].stations
-    # duration = graph.available_connections[15].duration
-    # traject3 = Traject(['maastricht', station2, station1], int(float(duration)), [graph.available_connections[2], graph.available_connections[15]])
-
-   
-    # # lijnvoering 1
-    # lijnvoering1 = Lijnvoering()
-    # lijnvoering1.add_traject(traject1)
-    # lijnvoering1.add_traject(traject2)
-
-    # # lijnvoering 2
-    # lijnvoering2 = Lijnvoering()
-    # lijnvoering2.add_traject(traject3)
-    # lijnvoering2.add_traject(traject1)
-
-    # print(lijnvoering1 == lijnvoering2)
-
+    print('\nchecking for unique solutions...\n')
 
     nTry = 0 
     nSolutions = 0
     nUnique = 0
     nonUnique = 0
     same_k = 0
+    yes = 0
 
     lijnvoeringen_by_K = dict()
     K_counter = dict()
 
-    while nTry < 100000:
+    while nTry < 1000:
 
         # for each try, create a new graph 
         nTry += 1
         new_graph = copy.deepcopy(graph)
         
-        # if not yet max. trajects and solution not found, add new traject to lijnvoering 
-        while len(new_graph.unused_connections) != 0 and len(new_graph.lijnvoering.trajecten) < new_graph.max_trajects:
+        # if not yet max. trajects and not yet all stations visited, add new traject to lijnvoering
+        while len(new_graph.visited_stations) != len(new_graph.stations) and len(new_graph.lijnvoering.trajecten) < new_graph.max_trajects:
             random_traject(new_graph)
+        
+        # if all stations are visited, solution is found
+        if len(new_graph.visited_stations) == len(new_graph.stations):
+            nSolutions += 1
+            
+            # add K
+            new_graph.lijnvoering_kwaliteit(new_graph.used_connections, new_graph.available_connections, new_graph.lijnvoering.trajecten)
 
-        nSolutions += 1
-        new_graph.lijnvoering_kwaliteit(set(new_graph.used_connections), new_graph.available_connections, new_graph.lijnvoering.trajecten)
-
-        # if found non-unique K
-        if new_graph.K in lijnvoeringen_by_K.keys():
-            same_k += 1
-            # check if duplicate if there is only one lijnvoeringen with same K
-            if type(lijnvoeringen_by_K[new_graph.K]) != list:
-                # if new lijnvoering turn out to be unique
-                if lijnvoeringen_by_K[new_graph.K] != new_graph.lijnvoering:
-                    lijnvoeringen_by_K[new_graph.K] = [lijnvoeringen_by_K[new_graph.K], new_graph.lijnvoering]
-                    K_counter[new_graph.K] += 1
-                    nUnique += 1
-                else:
-                    nonUnique += 1
-            # check if duplicate if there are already more unique lijnvoeringen with same K
-            else:
-                Unique = True
-                for lijnvoering in lijnvoeringen_by_K[new_graph.K]:
-                    if lijnvoering == new_graph.lijnvoering:
+            # if found non-unique K
+            if new_graph.K in lijnvoeringen_by_K.keys():
+                same_k += 1
+                # check for duplicate, if there is only one lijnvoeringen with same K
+                if type(lijnvoeringen_by_K[new_graph.K]) != list:
+                    yes += 1
+                    # if new lijnvoering turns out to be unique, create list of 2 solutions
+                    if lijnvoeringen_by_K[new_graph.K] != new_graph.lijnvoering:
+                        lijnvoeringen_by_K[new_graph.K] = [lijnvoeringen_by_K[new_graph.K], new_graph.lijnvoering]
+                        K_counter[new_graph.K] += 1
+                        nUnique += 1
+                    else:
                         nonUnique += 1
-                        Unique = False
-                # if new lijnvoering turn out to be unique
-                if Unique == True:
-                    lijnvoeringen_by_K[new_graph.K] = lijnvoeringen_by_K[new_graph.K] + [new_graph.lijnvoering]
-                    K_counter[new_graph.K] += 1
-                    nUnique += 1
-        # if found unique K
-        else:
-            nUnique += 1
-            lijnvoeringen_by_K[new_graph.K] = new_graph.lijnvoering
-            K_counter[new_graph.K] = 1
-
-
+                # check for duplicate, if there are more unique lijnvoeringen with same K
+                else:
+                    Unique = True
+                    for lijnvoering in lijnvoeringen_by_K[new_graph.K]:
+                        if lijnvoering == new_graph.lijnvoering:
+                            nonUnique += 1
+                            Unique = False
+                            break
+                    # if new lijnvoering turns out to be unique
+                    if Unique == True:
+                        lijnvoeringen_by_K[new_graph.K] = lijnvoeringen_by_K[new_graph.K] + [new_graph.lijnvoering]
+                        K_counter[new_graph.K] += 1
+                        nUnique += 1
+            # if found unique K
+            else:
+                nUnique += 1
+                lijnvoeringen_by_K[new_graph.K] = new_graph.lijnvoering
+                K_counter[new_graph.K] = 1
+        
         print(f"n: {nTry}")
         print(f"Solutions: {nSolutions}")
         print(f"nUnique: {nUnique}")
-        print(f"nNon-unique: {nonUnique}\n")
-        print(f"lijnvoeringen with same_k: {same_k}")
-
+        print(f"nNon-unique: {nonUnique}")
+        print(f"list works: {yes}")
+        print(f"lijnvoeringen with same_k: {same_k}\n")
 
     return new_graph
         
- 
 
 def random_algorithm_one_sol(graph):
     """
@@ -228,7 +202,7 @@ def random_algorithm_opt_sol(graph):
             nSolutions += 1
         
             # add quality-goalfunction
-            new_graph.lijnvoering_kwaliteit(set(new_graph.used_connections), new_graph.available_connections, new_graph.lijnvoering.trajecten)
+            new_graph.lijnvoering_kwaliteit(new_graph.used_connections, new_graph.available_connections, new_graph.lijnvoering.trajecten)
             
             # if quality higher then optimal, replace optimal results
             if new_graph.K > opt_K:

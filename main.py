@@ -26,7 +26,11 @@ def main():
         sys.exit("Not a valid input")
 
     #----------------------------------- Load Graph based on region ------------------------------------
+    # map_name = 'Holland'
+    # max_trajects = 7
+    # max_duration = 120
     railway_map = graph.Graph(map_name, max_trajects, max_duration)
+    # final_graph = randomise.random_algorithm_unique_sols(railway_map)
 
     #----------------------------------- Calculate statespace ------------------------------------
     # state_space = css.state_space_cal(railway_map)
@@ -40,10 +44,9 @@ def main():
         if map_name == 'Holland' and question == '1':
             final_graph = randomise.random_algorithm_one_sol(railway_map)
         else:
-            # final_graph = randomise.random_algorithm_unique_sols(railway_map)
             final_graph, K, all_K, dict_K = randomise.random_algorithm_opt_sol(railway_map)
             
-            # print soluation
+            # print solution
             print("Found optimal K of:", K)
             for traject in final_graph.lijnvoering.trajecten:
                 print("Traject", final_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
@@ -51,12 +54,23 @@ def main():
             # make visualtion of all K generated
             vis.visualise_steekproef(all_K)
             vis.visualise_steekproef_by_trajects(dict_K)
+    
+    elif algorithm.upper() == "G" or algorithm.upper() == "GREEDY":
+
+        iterations = 100000
+        final_graph, K = gr.greedy_start(railway_map, iterations)
+        
+        # print solution
+        print("Found optimal K of:", K)
+        for traject in final_graph.lijnvoering.trajecten:
+            print("Traject", final_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
+
 
     else: 
         sys.exit("Algorithm not yet implemented")
 
     #-------------------------------------- Visualisation Result -----------------------------------------
-    vis.visualise_solution(final_graph, map_name)
+    # vis.visualise_solution(final_graph, map_name)
 
     #-------------------------------------- Final Output to csv-----------------------------------------
     with open('output.csv', 'w', encoding='UTF8') as f:
