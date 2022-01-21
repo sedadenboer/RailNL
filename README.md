@@ -28,7 +28,7 @@ The state space of a problem contains all the possible solutions ("states") that
 
 `n!/(r!(n-r)!)`
 
-Here `n` is the number of unique trajectories shorter than 120 minutes and `r` is the max. number of trajectories. In the North- and South-Holland case `r = 7` and `n = 10835519`. The entire state space is thus equal to `10835519 * 10835518 * 10835517 * 10835516 * 10835515 * 10835514 * 10835513 = 10^10^8.16`.
+Here `n` is the number of unique trajectories shorter than 120 minutes and `r` is the max. number of trajectories. In the North- and South-Holland case `r` = 7 and `n` = 10835519. The entire state space is thus equal to 10835519 * 10835518 * 10835517 * 10835516 * 10835515 * 10835514 * 10835513 = 10^10^8.16.
 
 ### Algorithms
 #### Constraints
@@ -45,7 +45,7 @@ This algorithm picks a random beginning station and randomly picks a connection 
 
 #### Greedy
 
-#### Hill CLimber
+#### Hill Climber
 
 ## Prerequisits
 
