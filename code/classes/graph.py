@@ -8,13 +8,18 @@ from .lijnvoering import Lijnvoering
 
 class Graph():
     def __init__(self, source_map, max_trajects, max_duration):
+        # upload stations and connections
         self.stations = self.load_stations(source_map)
         self.available_connections = []
         self.load_connections(source_map)
+        # upload case-specific information
         self.max_trajects = max_trajects
         self.max_duration = max_duration
-        self.used_connections = []
+        # keep track of used connections and visited stations
+        self.used_connections = set()
         self.unused_connections = set(self.available_connections) - set(self.used_connections)
+        self.visited_stations = set()
+        # save result
         self.lijnvoering = Lijnvoering()
         self.K = 0
     
@@ -52,10 +57,13 @@ class Graph():
 
     def add_connection(self, connection):
         """
-        Update connections used and not-used based on added connection.
+        Update connections used and not-used and visited stations based on added connection.
         """
-        self.used_connections = self.used_connections + [connection]
-        self.unused_connections = set(self.available_connections) - set(self.used_connections)
+        self.used_connections.add(connection)
+        self.unused_connections = set(self.available_connections) - self.used_connections
+        [station1, station2] = connection.stations
+        self.visited_stations.add(station1)
+        self.visited_stations.add(station2)
     
     def lijnvoering_kwaliteit(self, used_connections, all_connections, lijnvoering):
         """
