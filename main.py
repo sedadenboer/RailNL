@@ -26,26 +26,31 @@ def main():
 
     # Ask user for algorithm to apply
     algorithm = input("Select algorithm: random (return r) or greedy (return g): ")
-    if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
+    if algorithm.upper() == "R":
         question = input("Select goal: one solution (return 1) or optimal solution (return 2): ")
 
     if (algorithm.upper() == "R" and question == '2') or (algorithm.upper() != "R"):
         iterations = input("Type number of iterations: ")
+
     #----------------------------------- Load Graph based on region ------------------------------------
     railway_map = graph.Graph(map_name, max_trajects, max_duration)
 
-    #----------------------------------- Calculate statespace/unique solutions ------------------------------------
+    #----------------------------------- Calculate statespace ------------------------------------
     # state_space = css.state_space_cal(railway_map)
 
-    # #--------------------------------------- Visualisation Start----------------------------------------
+    #--------------------------------------- Visualisation Start----------------------------------------
     # vis.visualise_start(railway_map, map_name)
 
-    # #--------------------------------------- Implement Algorithms ----------------------------------------
+    #--------------------------------------- Implement Algorithms ----------------------------------------
     if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
+
+        # Question 1.1
         if question == '1':
             random = randomise.Random(railway_map)
             random.run_one_sol()
             final_graph = random.graph
+
+        # Question 1.2 / 2.1 met Random 
         elif question == '2':
             random = randomise.Random(railway_map, int(iterations))
             random.run_opt_sol()
@@ -56,7 +61,8 @@ def main():
             for traject in final_graph.lijnvoering.trajecten:
                 print("Traject", final_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
     
-    elif algorithm.upper() == "G" or algorithm.upper() == "GREEDY":
+    # Question 1.2 / 2.1 met Greedy
+    elif algorithm.upper() == "G":
         greedy = gr.Greedy(railway_map, int(iterations))
         greedy.run()
         final_graph = greedy.graph
