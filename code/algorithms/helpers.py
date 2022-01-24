@@ -113,7 +113,7 @@ def new_traject(graph, start_stations, algorithm):
                 graph.add_connection(chosen_connection)
                 cur_station = graph.stations[new_station]
 
-            # if impossible within time constraint, end Traject
+            # if impossible to add connection within time constraint, end Traject
             else:
                 extend_traject = False
 

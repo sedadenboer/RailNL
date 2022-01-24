@@ -1,9 +1,11 @@
 import sys
-import csv 
+import csv
+from code import algorithms 
 
 from code.classes import graph
-from code.algorithms import randomise
+from code.algorithms import hillclimber, randomise
 from code.algorithms import greedy as gr
+from code.algorithms import hillclimber as hc
 from code.visualisation import visualise as vis
 from code.other import calculate_statespace as css
 
@@ -25,11 +27,12 @@ def main():
         sys.exit("Not a valid input")
 
     # Ask user for algorithm to apply
-    algorithm = input("Select algorithm: random (return r) or greedy (return g): ")
-    if algorithm.upper() == "R":
-        question = input("Select goal: one solution (return 1) or optimal solution (return 2): ")
+    algorithm = input("Select algorithm: random (return r), greedy (return g) or hillclimber (return hc): ")
+    
+    if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
+        question = input("Select goal: 1 solution (all connection, return 1) or optimal solution (return 2): ")
 
-    if (algorithm.upper() == "R" and question == '2') or (algorithm.upper() != "R"):
+    if ((algorithm.upper() == "R" or algorithm.upper() == "RANDOM") and question == '2') or (algorithm.upper() != "R"):
         iterations = input("Type number of iterations: ")
 
     #----------------------------------- Load Graph based on region ------------------------------------
@@ -62,7 +65,7 @@ def main():
                 print("Traject", final_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
     
     # Question 1.2 / 2.1 met Greedy
-    elif algorithm.upper() == "G":
+    elif algorithm.upper() == "G" or algorithm.upper() == "Greedy":
         greedy = gr.Greedy(railway_map, int(iterations))
         greedy.run()
         final_graph = greedy.graph
@@ -72,11 +75,22 @@ def main():
         for traject in greedy.graph.lijnvoering.trajecten:
             print("Traject", greedy.graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
 
+    elif algorithm.upper() == "HC" or algorithm.upper() == "HILLCLIMBER":
+        print("\nyet to be completed")
+        hillclimber = hc.Hillclimber(railway_map, int(iterations))
+        hillclimber.run()
+        final_graph = hillclimber.graph
+
+        # print solution
+        print("Found optimal K of:", hillclimber.graph.K)
+        for traject in hillclimber.graph.lijnvoering.trajecten:
+            print("Traject", hillclimber.graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
+   
     else: 
         sys.exit("Algorithm not yet implemented")
 
     #-------------------------------------- Visualisation Result -----------------------------------------
-    # vis.visualise_solution(final_graph, map_name)
+    vis.visualise_solution(final_graph, map_name)
 
     # #-------------------------------------- Final Output to csv-----------------------------------------
     # with open('output.csv', 'w', encoding='UTF8') as f:
