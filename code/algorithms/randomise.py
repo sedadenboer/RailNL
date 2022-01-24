@@ -52,6 +52,12 @@ class Random:
         # add graph of solution to Random object
         self.graph = new_graph
 
+        # write result out to csv
+        help.write_output_to_csv(new_graph, 'Random/One_Solution')
+
+        # create visualisation of result
+        vis.visualise_solution(new_graph, 'Random/One_Solution')
+
 
     def run_opt_sol(self):
         """
@@ -106,10 +112,10 @@ class Random:
         self.dict_K = dict_K
 
         # write result out to csv
-        help.write_output_to_csv(opt_map, 'Random')
+        help.write_output_to_csv(opt_map, 'Random/Opt_Solution')
 
         # create visualisation of result
-        vis.visualise_solution(opt_map, 'Random')
+        vis.visualise_solution(opt_map, 'Random/Opt_Solution')
 
 
 
