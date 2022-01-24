@@ -1,5 +1,6 @@
 from code.classes.traject import Traject
 from code.algorithms import helpers as help
+from code.visualisation import visualise as vis
 
 import random
 import copy
@@ -60,4 +61,11 @@ class Hillclimber:
         #     #TODO: als de staat is verbeterd (K is hoger):
         #         # TODO: vervang de oude staat door de nieuwe
         
+        # Add optimal graph to Hillclimber object
         self.graph = new_graph
+
+        # write result out to csv
+        help.write_output_to_csv(new_graph, 'Hillclimber')
+
+        # create visualisation of result
+        vis.visualise_solution(new_graph, 'Hillclimber')

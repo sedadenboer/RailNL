@@ -1,4 +1,5 @@
 from code.algorithms import helpers as help
+from code.visualisation import visualise as vis
 
 import random
 import copy
@@ -103,6 +104,12 @@ class Random:
         self.Nsols = nSolutions
         self.all_K = all_K
         self.dict_K = dict_K
+
+        # write result out to csv
+        help.write_output_to_csv(opt_map, 'Random')
+
+        # create visualisation of result
+        vis.visualise_solution(opt_map, 'Random')
 
 
 
