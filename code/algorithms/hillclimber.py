@@ -52,7 +52,7 @@ class Hillclimber:
         K = p * 10000 - traject.duration
 
         return K
-        
+
     def remove_traject_random(self, graph):
         """
         Remove random traject from Lijnvoering
