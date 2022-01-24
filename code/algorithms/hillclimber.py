@@ -10,9 +10,10 @@ class Hillclimber:
     """
     Hillclimber class that ..... (deletes Traject in Lijnvoering with lowest K)
     """
-    def __init__(self, graph, iterations):
+    def __init__(self, graph, iterations, remove_traject):
         self.graph = copy.deepcopy(graph)
         self.iterations = iterations
+        self.remove_traject = remove_traject
     
     def random_start_state(self):
         """
@@ -39,6 +40,98 @@ class Hillclimber:
                 break
             
         return new_graph
+    
+    def partial_K(self, traject):
+        """
+        Calculate the quality of the Traject, set T = 1
+        """
+        # fraction of ridden connections
+        p = len(traject.connections) / len(self.graph.available_connections)
+
+        # calculate K
+        K = p * 10000 - traject.duration
+
+        return K
+        
+    def remove_traject_random(self, graph):
+        """
+        Remove random traject from Lijnvoering
+        """
+        
+        # randomly chose traject to remove from Lijnvoering
+        traject_to_remove = random.choice(graph.lijnvoering.trajecten)
+
+        # remove traject and update variables
+        graph.lijnvoering.trajecten.remove(traject_to_remove)
+        graph.update_variables()
+
+        # update quality-goalfunction
+        graph.lijnvoering_kwaliteit(graph.used_connections, \
+                                        graph.available_connections, \
+                                        graph.lijnvoering.trajecten)
+
+        return graph
+
+    def remove_traject_lowest_K(self, graph):
+        """
+        Remove traject with lowest K from Lijnvoering
+        """
+        
+        bad_traject = graph.lijnvoering.trajecten[0]
+        lowest_K = self.partial_K(bad_traject)
+
+        # find traject with lowest K
+        for traject in graph.lijnvoering.trajecten:
+
+            partial_K = self.partial_K(traject)
+
+            # replace badest traject if partial_K lowest
+            if partial_K < lowest_K:
+                lowest_K = partial_K
+                bad_traject = traject
+        
+        # remove traject from lijnvoering
+        print(f"remove: {bad_traject.stations}")
+        graph.lijnvoering.trajecten.remove(bad_traject)
+        graph.update_variables()
+        # update quality-goalfunction
+        graph.lijnvoering_kwaliteit(graph.used_connections, \
+                                        graph.available_connections, \
+                                        graph.lijnvoering.trajecten)
+
+        return graph
+
+    def add_new_traject(self, graph):
+        """
+        Add new traject to Lijnvoering till solution is valid
+        """
+
+        n = 0 
+        while True: 
+
+            # if previous solution was invalid, remove from Lijnvoering
+            if n > 0:
+                graph.lijnvoering.trajecten.pop()
+                graph.update_variables()
+            n += 1
+
+            # find stations with one connection
+            start_stations = help.begin_stations(graph)
+
+            # add new traject to Lijnvoering
+            help.new_traject(graph, start_stations, random.choice)
+            print(f"add: {graph.lijnvoering.trajecten[-1].stations}")
+
+            if help.visited_all_stations(graph):
+                break
+        
+        # add quality-goalfunction
+        graph.lijnvoering_kwaliteit(graph.used_connections, \
+                                        graph.available_connections, \
+                                        graph.lijnvoering.trajecten)
+        
+        return graph
+
 
     def run(self):
         """
@@ -47,7 +140,7 @@ class Hillclimber:
         print('\nloading hillclimber constructed lijnvoering...\n')
 
         # retrieve random valid state 
-        random_start_state =  self.random_start_state()
+        current_state =  self.random_start_state()
     	
         # for x iterations:
         i = 0
@@ -55,17 +148,44 @@ class Hillclimber:
             i += 1
 
             # copy current state
-            new_graph = random_start_state
+            new_graph = copy.deepcopy(current_state)
 
-        #     #TODO: muteer de kopie
-        #     #TODO: als de staat is verbeterd (K is hoger):
-        #         # TODO: vervang de oude staat door de nieuwe
-        
+            # optional print statement
+            print()
+            for traject in new_graph.lijnvoering.trajecten:
+                print("Traject", new_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
+            print()
+            print(f"first K: {new_graph.K}")
+
+            # remove traject with lowest K from Lijnvoering
+            if self.remove_traject.upper() == "K":
+                new_graph = self.remove_traject_lowest_K(new_graph)
+            else:
+                new_graph = self.remove_traject_random(new_graph)
+
+            # optional print statement
+            print()
+            for traject in new_graph.lijnvoering.trajecten:
+                print("Traject", new_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
+            print()
+            print(f"removed K: {new_graph.K}")
+
+            # add new traject till valid solution is found
+            new_graph = self.add_new_traject(new_graph)
+            print(f"newly added K: {new_graph.K}")
+
+            # if K has increased, update current state
+            if new_graph.K > current_state.K:
+                print("current stated is changed")
+                current_state = new_graph
+            else:
+                print("current stated is not changed")
+
         # Add optimal graph to Hillclimber object
-        self.graph = new_graph
+        self.graph = current_state
 
         # write result out to csv
-        help.write_output_to_csv(new_graph, 'Hillclimber')
+        help.write_output_to_csv(self.graph, 'Hillclimber')
 
         # create visualisation of result
-        vis.visualise_solution(new_graph, 'Hillclimber')
+        vis.visualise_solution(self.graph, 'Hillclimber')

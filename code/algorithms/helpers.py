@@ -111,8 +111,8 @@ def new_traject(graph, start_stations, algorithm):
             
             # add valid connection to traject if within time constraint 
             if new_traject.update_traject(new_station, int(float(duration)), chosen_connection, graph.max_duration) == True:
-                graph.add_connection(chosen_connection)
                 cur_station = graph.stations[new_station]
+                graph.add_connection(chosen_connection)
 
             # if impossible to add connection within time constraint, end Traject
             else:

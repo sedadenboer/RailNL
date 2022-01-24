@@ -55,6 +55,21 @@ class Graph():
                 self.stations[row['station1']].add_connection(connection, row['station2'])
                 self.stations[row['station2']].add_connection(connection, row['station1'])
 
+    def update_variables(self):
+        """
+        Update connections used and not-used and visited stations based on added connection.
+        """
+
+        stations = []
+        connections = []
+        for traject in self.lijnvoering.trajecten:
+            stations += traject.stations
+            connections += traject.connections
+        
+        self.used_connections = set(connections)
+        self.unused_connections = set(self.available_connections) - self.used_connections
+        self.visited_stations = set(stations)
+
     def add_connection(self, connection):
         """
         Update connections used and not-used and visited stations based on added connection.

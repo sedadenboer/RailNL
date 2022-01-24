@@ -74,8 +74,8 @@ def main():
             print("Traject", greedy.graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
 
     elif algorithm.upper() == "HC" or algorithm.upper() == "HILLCLIMBER":
-        print("\nyet to be completed")
-        hillclimber = hc.Hillclimber(railway_map, int(iterations))
+        remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
+        hillclimber = hc.Hillclimber(railway_map, int(iterations), remove_traject)
         hillclimber.run()
         final_graph = hillclimber.graph
 
@@ -86,7 +86,7 @@ def main():
    
     else: 
         sys.exit("Algorithm not yet implemented")
-        
+
 
 if __name__ == '__main__':
 
