@@ -1,4 +1,5 @@
 from code.algorithms import helpers as help
+from code.visualisation import visualise as vis
 
 import copy
 
@@ -68,4 +69,10 @@ class Greedy:
         # add optimal graph and K to greedy object
         self.graph = opt_map
         self.Nsols = nSolutions
+
+        # write result out to csv
+        help.write_output_to_csv(opt_map, 'Greedy')
+
+        # create visualisation of result
+        vis.visualise_solution(opt_map, 'Greedy')
 

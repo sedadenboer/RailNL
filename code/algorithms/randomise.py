@@ -1,4 +1,5 @@
 from code.algorithms import helpers as help
+from code.visualisation import visualise as vis
 
 import random
 import copy
@@ -50,6 +51,12 @@ class Random:
         
         # add graph of solution to Random object
         self.graph = new_graph
+
+        # write result out to csv
+        help.write_output_to_csv(new_graph, 'Random/One_Solution')
+
+        # create visualisation of result
+        vis.visualise_solution(new_graph, 'Random/One_Solution')
 
 
     def run_opt_sol(self):
@@ -103,6 +110,12 @@ class Random:
         self.Nsols = nSolutions
         self.all_K = all_K
         self.dict_K = dict_K
+
+        # write result out to csv
+        help.write_output_to_csv(opt_map, 'Random/Opt_Solution')
+
+        # create visualisation of result
+        vis.visualise_solution(opt_map, 'Random/Opt_Solution')
 
 
 

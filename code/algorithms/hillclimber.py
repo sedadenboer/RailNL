@@ -1,5 +1,6 @@
 from code.classes.traject import Traject
 from code.algorithms import helpers as help
+from code.visualisation import visualise as vis
 
 import random
 import copy
@@ -85,4 +86,15 @@ class Hillclimber:
                 opt_map = new_graph
 
         
+<<<<<<< HEAD
         self.graph = opt_map
+=======
+        # Add optimal graph to Hillclimber object
+        self.graph = new_graph
+
+        # write result out to csv
+        help.write_output_to_csv(new_graph, 'Hillclimber')
+
+        # create visualisation of result
+        vis.visualise_solution(new_graph, 'Hillclimber')
+>>>>>>> 93b0c93a21e831711a787374062f1c24be3ae04a
