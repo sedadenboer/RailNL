@@ -15,6 +15,7 @@ class Random:
         self.Nsols = int
         self.all_K = []
         self.dict_K = dict()
+        self.all_opt_K = dict()
             
 
     def run_one_sol(self):
@@ -71,6 +72,7 @@ class Random:
 
         all_K = []
         dict_K = dict()
+        all_opt_K = dict()
 
         # find stations with one connection
         start_stations = help.begin_stations(self.graph)
@@ -97,25 +99,32 @@ class Random:
                 if new_graph.K > opt_K:
                     opt_K = new_graph.K
                     opt_map = new_graph
-                
+
                 # steekproef variables
                 all_K.append(new_graph.K)
                 if len(new_graph.lijnvoering.trajecten) in dict_K.keys():
                     dict_K[len(new_graph.lijnvoering.trajecten)].append(new_graph.K)
                 else:
                     dict_K[len(new_graph.lijnvoering.trajecten)] = [new_graph.K]
+
+                # add the current optimal K to a dictionary with the solution number as key
+                all_opt_K[nSolutions] = opt_K
                 
          # add optimal graph and K to Random object
         self.graph = opt_map
         self.Nsols = nSolutions
         self.all_K = all_K
         self.dict_K = dict_K
+        self.all_opt_K = all_opt_K
 
         # write result out to csv
         help.write_output_to_csv(opt_map, 'Random/Opt_Solution')
 
         # create visualisation of result
         vis.visualise_solution(opt_map, 'Random/Opt_Solution')
+
+        # create visualisation of optimal K improvement
+        vis.visualise_opt_K_improvement(all_opt_K, 'Random')
 
 
 

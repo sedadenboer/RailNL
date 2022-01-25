@@ -14,6 +14,7 @@ class Greedy:
         self.graph = copy.deepcopy(graph)
         self.iterations = iterations
         self.Nsols = int
+        self.all_opt_K = dict()
 
     def greedy_choice(self, options):
         """
@@ -39,6 +40,7 @@ class Greedy:
         opt_K = 0
         opt_map = self.graph
         nSolutions = 0
+        all_opt_K = dict()
 
         # find stations with one connection
         start_stations = help.begin_stations(self.graph)
@@ -65,14 +67,21 @@ class Greedy:
                 if new_graph.K > opt_K:
                     opt_K = new_graph.K
                     opt_map = new_graph
-        
+
+                # add the current optimal K to a dictionary with the solution number as key
+                all_opt_K[nSolutions] = opt_K
+
         # add optimal graph and K to greedy object
         self.graph = opt_map
         self.Nsols = nSolutions
+        self.all_opt_K = all_opt_K
 
         # write result out to csv
         help.write_output_to_csv(opt_map, 'Greedy')
 
         # create visualisation of result
         vis.visualise_solution(opt_map, 'Greedy')
+
+        # create visualisation of optimal K improvement
+        vis.visualise_opt_K_improvement(all_opt_K, 'Greedy')
 

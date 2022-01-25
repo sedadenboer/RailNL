@@ -178,3 +178,15 @@ def visualise_steekproef_by_trajects(dict_K):
     fig.savefig(f"plots/steekproef_pro_trajects")
 
    
+def visualise_opt_K_improvement(all_opt_K, algorithm_name):
+    """
+    Visualize how the K value improves during the iterations
+    """
+
+    fig = plt.figure(figsize=(20,20))
+    plt.plot(all_opt_K.keys(), all_opt_K.values())
+    plt.xlabel('iterations', fontsize = 20)
+    plt.ylabel('K', fontsize = 20)
+
+    fig.suptitle(f"Improvement of K after {len(all_opt_K.keys())} iterations using {algorithm_name} algorithm", fontsize = 25, y = 0.93)
+    fig.savefig(f"plots/Opt_K_Improvement_{algorithm_name}")

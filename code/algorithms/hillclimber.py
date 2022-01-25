@@ -17,6 +17,7 @@ class Hillclimber:
         self.remove_traject = remove_traject
         self.alg_choice = alg_choice
         self.greedy_iterations = greedy_iterations
+        self.all_opt_K = dict()
     
     def random_start_state(self):
         """
@@ -162,6 +163,8 @@ class Hillclimber:
         # set random start state as default
         current_state = self.random_start_state()
 
+        all_opt_K = dict()
+
         # retrieve random valid start state 
         if self.alg_choice == "R" or self.alg_choice == "RANDOM":
             current_state = self.random_start_state()
@@ -207,12 +210,19 @@ class Hillclimber:
                 current_state = new_graph
             else:
                 print("current stated is not changed")
+            
+            # add the current optimal K to a dictionary with the solution number as key
+            all_opt_K[i] = current_state.K
 
         # Add optimal graph to Hillclimber object
         self.graph = current_state
+        self.all_opt_K = all_opt_K
 
         # write result out to csv
         help.write_output_to_csv(self.graph, 'Hillclimber')
 
         # create visualisation of result
         vis.visualise_solution(self.graph, 'Hillclimber')
+
+        # create visualisation of optimal K improvement
+        vis.visualise_opt_K_improvement(all_opt_K, 'Hillclimber')
