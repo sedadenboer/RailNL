@@ -87,6 +87,9 @@ class Greedy:
             # create visualisation of result
             vis.visualise_solution(opt_map, 'Greedy')
 
+            # create compact visualisation of result
+            vis.visualise_solution_compact(opt_map, 'Greedy')
+
         # create visualisation of optimal K improvement
         vis.visualise_opt_K_improvement(all_opt_K, 'Greedy')
 

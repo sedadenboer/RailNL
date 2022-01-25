@@ -131,6 +131,9 @@ class Random:
             # create visualisation of result
             vis.visualise_solution(opt_map, 'Random/Opt_Solution')
 
+            # create compact visualisation of result
+            vis.visualise_solution_compact(opt_map, 'Random/Opt_Solution')
+
         # create visualisation of optimal K improvement
         vis.visualise_opt_K_improvement(all_opt_K, 'Random')
 
