@@ -74,8 +74,16 @@ def main():
             print("Traject", greedy.graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
 
     elif algorithm.upper() == "HC" or algorithm.upper() == "HILLCLIMBER":
-        remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
-        hillclimber = hc.Hillclimber(railway_map, int(iterations), remove_traject)
+        alg_choice = input("Select algorithm for initial solution: random (return R) or greedy (return G): ").upper()
+
+        if alg_choice == "R" or alg_choice == "RANDOM":
+            remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
+            hillclimber = hc.Hillclimber(railway_map, int(iterations), alg_choice, remove_traject, None)
+        elif alg_choice == "G" or alg_choice == "GREEDY":
+            greedy_iterations = input("Type number of greedy iterations: ")
+            remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
+            hillclimber = hc.Hillclimber(railway_map, int(iterations), alg_choice, remove_traject, int(greedy_iterations))
+        
         hillclimber.run()
         final_graph = hillclimber.graph
 
