@@ -10,10 +10,12 @@ class Greedy:
         - lowest duration
         - unused connection get priority over used connection
     """
-    def __init__(self, graph, iterations):
+    def __init__(self, graph, prefer_unused_connection, save_output, iterations):
         self.graph = copy.deepcopy(graph)
+        self.prefer_unused_connection = prefer_unused_connection
         self.iterations = iterations
         self.Nsols = int
+        self.save_output = save_output
 
     def greedy_choice(self, options):
         """
@@ -50,7 +52,7 @@ class Greedy:
             
             # if not yet all stations and max. number of trajects reached, add new traject to lijnvoering 
             while help.reached_max_depth(new_graph) == False and help.visited_all_stations(new_graph) == False:
-                help.new_traject(new_graph, start_stations, self.greedy_choice)
+                help.new_traject(new_graph, start_stations, self.greedy_choice, self.prefer_unused_connection)
 
             # only valid solution if all stations are visited
             if help.visited_all_stations(new_graph):
@@ -70,9 +72,12 @@ class Greedy:
         self.graph = opt_map
         self.Nsols = nSolutions
 
-        # write result out to csv
-        help.write_output_to_csv(opt_map, 'Greedy')
+        # save results
+        if self.save_output == True:
+            
+            # write result out to csv
+            help.write_output_to_csv(opt_map, 'Greedy')
 
-        # create visualisation of result
-        vis.visualise_solution(opt_map, 'Greedy')
+            # create visualisation of result
+            vis.visualise_solution(opt_map, 'Greedy')
 

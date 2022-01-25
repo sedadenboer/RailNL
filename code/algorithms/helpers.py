@@ -68,7 +68,7 @@ def unique_station_at_traject(cur_station, stations_at_traject):
 
     return not all(item in stations_at_traject for item in con_stations) 
 
-def new_traject(graph, start_stations, algorithm):
+def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
     """
     create new Traject and add to Lijnvoering
     """
@@ -79,9 +79,14 @@ def new_traject(graph, start_stations, algorithm):
         chosen_connection = list(station_obj.connections.keys())[0]
         [station1, station2, duration] = new_connection(chosen_connection, station_obj)
 
-    # else, randomly select start station from unused connections @ lijnvoering
+    # else, randomly select start station ..
     else:
-        chosen_connection = random.choice(list(graph.unused_connections))
+        # .. from unused connections @ lijnvoering
+        if prefer_unused_connection:
+            chosen_connection = random.choice(list(graph.unused_connections))
+        # .. from all connections availble
+        else:
+            chosen_connection = random.choice(list(graph.available_connections))
         [station1, station2, duration] = new_connection(chosen_connection)
     
     # start new traject
@@ -91,9 +96,12 @@ def new_traject(graph, start_stations, algorithm):
     extend_traject = True
     while extend_traject:
 
-        # prefer new connection from connections not yet at Lijnvoering
-        if unused_connection(cur_station, graph): 
-            options = unused_connection(cur_station, graph)
+        # chose new connection ..
+        # .. from connections not yet at Lijnvoering
+        if prefer_unused_connection:
+            if unused_connection(cur_station, graph): 
+                options = unused_connection(cur_station, graph)
+        # .. from all connections available
         else:
             options = list(cur_station.connections.keys())
 

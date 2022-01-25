@@ -10,10 +10,12 @@ class Hillclimber:
     """
     Hillclimber class that ..... (deletes Traject in Lijnvoering with lowest K)
     """
-    def __init__(self, graph, iterations, remove_traject):
+    def __init__(self, graph, prefer_unused_connection, save_output, iterations, remove_traject):
         self.graph = copy.deepcopy(graph)
         self.iterations = iterations
+        self.prefer_unused_connection = prefer_unused_connection
         self.remove_traject = remove_traject
+        self.save_output = save_output
     
     def random_start_state(self):
         """
@@ -29,7 +31,7 @@ class Hillclimber:
             
             # if not yet all stations and max. number of trajects reached, add new traject to lijnvoering 
             while help.reached_max_depth(new_graph) == False and help.visited_all_stations(new_graph) == False:
-                help.new_traject(new_graph, start_stations, random.choice)
+                help.new_traject(new_graph, start_stations, random.choice, self.prefer_unused_connection)
 
             # only valid solution if all stations are visited
             if help.visited_all_stations(new_graph):
@@ -120,7 +122,7 @@ class Hillclimber:
             start_stations = help.begin_stations(graph)
 
             # add new traject to Lijnvoering
-            help.new_traject(graph, start_stations, random.choice)
+            help.new_traject(graph, start_stations, random.choice, self.prefer_unused_connection)
             print(f"add: {graph.lijnvoering.trajecten[-1].stations}")
 
             if help.visited_all_stations(graph):
@@ -190,8 +192,11 @@ class Hillclimber:
         # Add optimal graph to Hillclimber object
         self.graph = current_state
 
-        # write result out to csv
-        help.write_output_to_csv(self.graph, 'Hillclimber')
+        # save results
+        if self.save_output == True:
 
-        # create visualisation of result
-        vis.visualise_solution(self.graph, 'Hillclimber')
+            # write result out to csv
+            help.write_output_to_csv(self.graph, 'Hillclimber')
+            
+            # create visualisation of result
+            vis.visualise_solution(self.graph, 'Hillclimber')

@@ -9,12 +9,14 @@ class Random:
     """
     The Random class that choses a valid random new connection in each Traject
     """
-    def __init__(self, graph, iterations = None):
+    def __init__(self, graph, prefer_unused_connection, save_output, iterations = None):
         self.graph = copy.deepcopy(graph)
         self.iterations = iterations
+        self.prefer_unused_connection = prefer_unused_connection
         self.Nsols = int
         self.all_K = []
         self.dict_K = dict()
+        self.save_output = save_output
             
 
     def run_one_sol(self):
@@ -37,7 +39,7 @@ class Random:
 
             # if not yet max. trajects and solution not found, add new traject to lijnvoering 
             while len(new_graph.unused_connections) != 0 and help.reached_max_depth(new_graph) == False:
-                help.new_traject(new_graph, start_stations, random.choice)
+                help.new_traject(new_graph, start_stations, random.choice, self.prefer_unused_connection)
 
             # if all connections used, print solution and stop loop
             if len(new_graph.unused_connections) == 0:
@@ -52,11 +54,14 @@ class Random:
         # add graph of solution to Random object
         self.graph = new_graph
 
-        # write result out to csv
-        help.write_output_to_csv(new_graph, 'Random/One_Solution')
+        # save output
+        if self.save_output == True:
+            
+            # write result out to csv
+            help.write_output_to_csv(new_graph, 'Random/One_Solution')
 
-        # create visualisation of result
-        vis.visualise_solution(new_graph, 'Random/One_Solution')
+            # create visualisation of result
+            vis.visualise_solution(new_graph, 'Random/One_Solution')
 
 
     def run_opt_sol(self):
@@ -82,7 +87,7 @@ class Random:
             
             # if not yet all stations and max. number of trajects reached, add new traject to lijnvoering 
             while help.reached_max_depth(new_graph) == False and help.visited_all_stations(new_graph) == False:
-                help.new_traject(new_graph, start_stations, random.choice)
+                help.new_traject(new_graph, start_stations, random.choice, self.prefer_unused_connection)
 
             # only valid solution if all stations are visited
             if help.visited_all_stations(new_graph):
@@ -111,11 +116,14 @@ class Random:
         self.all_K = all_K
         self.dict_K = dict_K
 
-        # write result out to csv
-        help.write_output_to_csv(opt_map, 'Random/Opt_Solution')
+        # save output
+        if self.save_output == True:
 
-        # create visualisation of result
-        vis.visualise_solution(opt_map, 'Random/Opt_Solution')
+            # write result out to csv
+            help.write_output_to_csv(opt_map, 'Random/Opt_Solution')
+
+            # create visualisation of result
+            vis.visualise_solution(opt_map, 'Random/Opt_Solution')
 
 
 
