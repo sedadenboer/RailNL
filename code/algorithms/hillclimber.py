@@ -216,5 +216,8 @@ class Hillclimber:
             # create visualisation of result
             vis.visualise_solution(self.graph, 'Hillclimber')
 
+            # create compact visualisation of result
+            vis.visualise_solution_compact(opt_map, 'Hillclimber')
+
             # create visualisation of optimal K improvement
             vis.visualise_opt_K_improvement(all_opt_K, 'Hillclimber')
