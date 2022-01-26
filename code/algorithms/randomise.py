@@ -45,6 +45,11 @@ class Random:
             # if all connections used, print solution and stop loop
             if len(new_graph.unused_connections) == 0:
                 solution = True
+
+                # add quality-goalfunction
+                new_graph.lijnvoering_kwaliteit(new_graph.used_connections, \
+                                                new_graph.available_connections, \
+                                                new_graph.lijnvoering.trajecten)
                 
                 print('Found the following correct lijnvoering at try number:', nTry)
                 for i, traject in enumerate(new_graph.lijnvoering.trajecten):
@@ -62,7 +67,7 @@ class Random:
             help.write_output_to_csv(new_graph, 'Random/One_Solution')
 
             # create visualisation of result
-            vis.visualise_solution(new_graph, 'Random/One_Solution')
+            vis.visualise_solution_new(new_graph, 'Random/One_Solution')
 
 
     def run_opt_sol(self):

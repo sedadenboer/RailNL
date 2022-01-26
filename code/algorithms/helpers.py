@@ -98,8 +98,7 @@ def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
 
         # chose new connection ..
         # .. from connections not yet at Lijnvoering
-        if prefer_unused_connection:
-            if unused_connection(cur_station, graph): 
+        if prefer_unused_connection and unused_connection(cur_station, graph): 
                 options = unused_connection(cur_station, graph)
         # .. from all connections available
         else:
@@ -121,6 +120,8 @@ def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
             if new_traject.update_traject(new_station, int(float(duration)), chosen_connection, graph.max_duration) == True:
                 cur_station = graph.stations[new_station]
                 graph.add_connection(chosen_connection)
+                print(f"added connection {chosen_connection.id}: {chosen_connection}")
+
 
             # if impossible to add connection within time constraint, end Traject
             else:
