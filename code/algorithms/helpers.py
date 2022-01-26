@@ -77,6 +77,7 @@ def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
     if len(graph.lijnvoering.trajecten) < len(start_stations):
         station_obj = start_stations[len(graph.lijnvoering.trajecten)]
         chosen_connection = list(station_obj.connections.keys())[0]
+        chosen_connection = graph.available_connections[int(chosen_connection.id)-1]
         [station1, station2, duration] = new_connection(chosen_connection, station_obj)
 
     # else, randomly select start station ..
@@ -120,8 +121,6 @@ def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
             if new_traject.update_traject(new_station, int(float(duration)), chosen_connection, graph.max_duration) == True:
                 cur_station = graph.stations[new_station]
                 graph.add_connection(chosen_connection)
-                print(f"added connection {chosen_connection.id}: {chosen_connection}")
-
 
             # if impossible to add connection within time constraint, end Traject
             else:

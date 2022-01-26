@@ -85,9 +85,6 @@ class Greedy:
             help.write_output_to_csv(opt_map, 'Greedy')
 
             # create visualisation of result
-            vis.visualise_solution(opt_map, 'Greedy')
-
-            # create compact visualisation of result
             vis.visualise_solution_compact(opt_map, 'Greedy')
 
         # create visualisation of optimal K improvement

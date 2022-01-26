@@ -67,7 +67,7 @@ class Random:
             help.write_output_to_csv(new_graph, 'Random/One_Solution')
 
             # create visualisation of result
-            vis.visualise_solution_new(new_graph, 'Random/One_Solution')
+            vis.visualise_solution_compact(new_graph, 'Random/One_Solution')
 
 
     def run_opt_sol(self):
@@ -132,9 +132,6 @@ class Random:
 
             # write result out to csv
             help.write_output_to_csv(opt_map, 'Random/Opt_Solution')
-
-            # create visualisation of result
-            vis.visualise_solution(opt_map, 'Random/Opt_Solution')
 
             # create compact visualisation of result
             vis.visualise_solution_compact(opt_map, 'Random/Opt_Solution')

@@ -213,11 +213,8 @@ class Hillclimber:
             # write result out to csv
             help.write_output_to_csv(self.graph, 'Hillclimber')
             
-            # create visualisation of result
-            vis.visualise_solution(self.graph, 'Hillclimber')
-
             # create compact visualisation of result
-            vis.visualise_solution_compact(opt_map, 'Hillclimber')
+            vis.visualise_solution_compact(self.graph, 'Hillclimber')
 
             # create visualisation of optimal K improvement
             vis.visualise_opt_K_improvement(all_opt_K, 'Hillclimber')
