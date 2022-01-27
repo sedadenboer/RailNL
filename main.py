@@ -142,9 +142,9 @@ def main():
             alg_choice = input("Select algorithm for initial solution: random (return r) or greedy (return g): ").upper()
             start_iterations = input("Type number of random/greedy iterations to generate start state: ")
             remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
+            sim_anneal = input("Would you like to apply simulated annealing? yes (return y) or no (return n): ")
 
-
-            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations))
+            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations), sim_anneal)
             hillclimber.run()
             final_graph = hillclimber.graph
 

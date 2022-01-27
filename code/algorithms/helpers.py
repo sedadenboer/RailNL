@@ -83,7 +83,7 @@ def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
     # else, randomly select start station ..
     else:
         # .. from unused connections @ lijnvoering
-        if prefer_unused_connection:
+        if prefer_unused_connection and len(graph.unused_connections) != 0:
             chosen_connection = random.choice(list(graph.unused_connections))
         # .. from all connections availble
         else:
