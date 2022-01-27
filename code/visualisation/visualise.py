@@ -371,3 +371,33 @@ def visualise_opt_K_improvement(all_opt_K, algorithm_name, start_alg = None, sta
         fig.suptitle(f"Improvement of K after {len(all_opt_K.keys())} iterations using {algorithm_name} algorithm", fontsize = 25, y = 0.93)
     
     fig.savefig(f"plots/Opt_K_Improvement_{algorithm_name}")
+
+
+def visualise_opt_K_all_algorithms(opt_K_random, opt_K_greedy, opt_K_hillclimber, prefer_unused_connections, start_alg, start_it, random_or_K):
+    """
+    Visualize how the optimal K compares for all algorithms after n iterations
+    """
+    
+    fig = plt.figure(figsize=(20,20))
+    plt.plot(opt_K_random.keys(), opt_K_random.values(), color = 'blue', label = 'random')
+    plt.plot(opt_K_greedy.keys(), opt_K_greedy.values(), color = 'green', label = 'greedy')
+    if start_alg.upper() == "R":
+        start_alg = "Random"
+    else:
+        start_alg = "Greedy"
+    if random_or_K.upper() == "R":
+        random_or_K = "Random Traject"
+    else:
+        random_or_K = "Traject with lowest K"
+    plt.plot(opt_K_hillclimber.keys(), opt_K_hillclimber.values(), color = 'red', label = f'hillclimber ({start_alg} start (n = {start_it}), {random_or_K} removed)')
+    plt.xlabel('iterations', fontsize = 20)
+    plt.ylabel('K', fontsize = 20)
+    plt.legend(title = 'Algorithm')
+
+    if prefer_unused_connections:
+        heuristic = ''
+    else:
+        heuristic = ' not'
+
+    fig.suptitle(f"Improvement of K after {len(opt_K_random.keys())} iterations, unused connections{heuristic} preferred", fontsize = 25, y = 0.93)
+    fig.savefig("plots/All_K_Improvement")
