@@ -1,4 +1,6 @@
 import sys
+import time
+import pickle
 
 from code.classes import graph
 from code.visualisation import visualise as vis
@@ -6,6 +8,7 @@ from code.algorithms import randomise
 from code.algorithms import greedy as gr
 from code.algorithms import hillclimber as hc
 from code.other import calculate_statespace as css
+
 
 
 def main():
@@ -61,6 +64,8 @@ def main():
     vis.visualise_start(railway_map, map_name)
 
     #--------------------------------------- Implement Algorithms ----------------------------------------
+    tic = time.perf_counter()
+
     if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
 
         # Question 1.1
@@ -92,15 +97,12 @@ def main():
             print("Traject", greedy.graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
 
     elif algorithm.upper() == "HC" or algorithm.upper() == "HILLCLIMBER":
-        alg_choice = input("Select algorithm for initial solution: random (return R) or greedy (return G): ").upper()
+        alg_choice = input("Select algorithm for initial solution: random (return r) or greedy (return g): ").upper()
         start_iterations = input("Type number of random/greedy iterations to generate start state: ")
         remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
 
-        if alg_choice == "R" or alg_choice == "RANDOM":
-            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations))
-        elif alg_choice == "G" or alg_choice == "GREEDY":
-            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations))
-        
+
+        hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations))
         hillclimber.run()
         final_graph = hillclimber.graph
 
@@ -112,6 +114,13 @@ def main():
     else: 
         sys.exit("Algorithm not (yet) implemented")
 
+    toc = time.perf_counter()
+
+    print(f"Algorithm runned for {toc - tic:0.4f} seconds / {(toc - tic)/60:0.4f} minutes")
+
+    ## optional pickle dumping
+    # pickle.dump(final_graph, open( "save.p", "wb" ) )
+    # favorite_color = pickle.load( open( "save.p", "rb" ) )
 
 if __name__ == '__main__':
 
