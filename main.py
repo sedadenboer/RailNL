@@ -37,7 +37,7 @@ def main():
     vis.visualise_start(railway_map, map_name)
 
     # Ask user to run all algorithms or one
-    K_comparison = input("Would you like to compare K improvement for all algorithms (return all) or run just one (return one)? ")
+    K_comparison = input("Would you like to compare K improvement and distribution for all algorithms (return all) or run just one (return one)? ")
     
     # If user wants to run all algorithms
     if K_comparison.upper() == "ALL":
