@@ -32,14 +32,13 @@ Here `n` is the number of unique trajectories shorter than 120 minutes and `r` i
 
 ### Algorithms
 #### Constraints
-To narrow down the problem and make the solution more realistic to real-life line management, there have been added a few general heuristics/constraints ("rules-of-thumb"):
+To narrow down the problem and make the solution more realistic to real-life line management, there have been added a few general constraints:
 
 * A trajectory cannot contain the same connection or station twice or more times.
 * No teleportation can take place; there has to be continued from the previous destination of the trajectory.
 * All stations have to be included in a line management solution, only then a line management solution is valid.
 * A new connection is first being chosen from connections that are not yet represented in the line management solution. If this is not possible, overlap in connections is allowed.
 * The start station of a trajectory is being chosen from a list of start stations with only one connection. If these are all used, a random start station is being chosen.
-
 
 #### Randomise
 This algorithm picks a random beginning station and randomly picks a connection to go to the next station. It keeps adding connections to the trajectory as long as it remains within the constraints. It also starts a new trajectory if all connections from a station have already been ridden or if the only unused connection left leads to a station that has already been visited. For this algorithm there is an option of finding just one valid solution (with all connections ridden) or do multiple iterations to find a solution with the highest K for this sample (not all connections have to be ridden). Another option is to prioritize unused connections while making trajectories.
