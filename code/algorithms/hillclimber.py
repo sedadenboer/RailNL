@@ -15,7 +15,7 @@ class Hillclimber:
     Hillclimber class that ..... (deletes Traject in Lijnvoering with lowest K)
     """
 
-    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, iterations, start_iterations,sim_anneal):
+    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, iterations, start_iterations, sim_anneal, lin_or_exp):
         self.graph = copy.deepcopy(graph)
         self.iterations = iterations
         self.prefer_unused_connection = prefer_unused_connection
@@ -23,10 +23,11 @@ class Hillclimber:
         self.save_output = save_output
         self.alg_choice = alg_choice
         self.start_iterations = start_iterations
+        self.all_K = []
         self.all_opt_K = dict()
         if sim_anneal.upper() == "Y" or sim_anneal.upper() == "YES":
             self.sim_anneal = True
-            self.formula = input("Would you like to apply linear (return l) or exponential (return e) formula?: ")
+            self.formula = lin_or_exp
         else:
             self.sim_anneal = False
 
@@ -182,7 +183,8 @@ class Hillclimber:
         elif self.alg_choice.upper() == "G" or self.alg_choice.upper() == "GREEDY":
             current_state = self.greedy_start_state()
 
-        # save all optimal K in a dictionary
+        # save all k and optimal K
+        all_K = []
         all_opt_K = dict() 
     	
         # for i iterations:
@@ -245,11 +247,15 @@ class Hillclimber:
                 else:
                     print("current stated is not changed")
             
+            # steekproef variables
+            all_K.append(new_graph.K)
+
             # add the current optimal K to a dictionary with the solution number as key
             all_opt_K[i] = current_state.K
 
         # Add optimal graph to Hillclimber object
         self.graph = current_state
+        self.all_K = all_K
         self.all_opt_K = all_opt_K
 
         # save results

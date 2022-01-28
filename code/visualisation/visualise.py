@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 import numpy as np
+import os
 
 def visualise_start(railway_map, map_name):
     """
@@ -401,3 +402,51 @@ def visualise_opt_K_all_algorithms(opt_K_random, opt_K_greedy, opt_K_hillclimber
 
     fig.suptitle(f"Improvement of K after {len(opt_K_random.keys())} iterations, unused connections{heuristic} preferred", fontsize = 25, y = 0.93)
     fig.savefig("plots/All_K_Improvement")
+
+def visualise_K_distribution_comparison(all_K_random, all_K_greedy, all_K_hillclimber, prefer_unused_connections, start_alg, start_it, random_or_K, sim_anneal, lin_or_exp):
+    """
+    Visualize the distribution of K in a histogram for all algorithms.
+    """
+    fig = plt.figure(figsize=(20,20))
+    plt.hist(all_K_random, bins = 250, color = 'blue', label = 'random', alpha = 0.5)
+    plt.hist(all_K_greedy, bins = 250, color = 'green', label = 'greedy', alpha = 0.5)
+
+    alg_choice_name = ""
+    traject_choice_name = ""
+    hc_sa_filename = "hillclimber"
+    hillclimber_or_sim_annealing = "hillclimber"
+
+    if start_alg.upper() == "R":
+        alg_choice_name = "Random"
+    else:
+        alg_choice_name = "Greedy"
+    if random_or_K.upper() == "R":
+        traject_choice_name = "Random Traject"
+    else:
+        traject_choice_name = "Traject with lowest K"
+
+    if sim_anneal.upper() == "Y" or sim_anneal.upper() == "YES":
+        if lin_or_exp.upper() == "L":
+            hillclimber_or_sim_annealing = "simulated annealing, linear"
+            hc_sa_filename = "sim_anneal_lin"
+        elif lin_or_exp.upper() == "E":
+            hillclimber_or_sim_annealing = "simulated annealing, exponential"
+            hc_sa_filename = "sim_anneal_exp"
+
+    if prefer_unused_connections:
+        heuristic = ''
+    else:
+        heuristic = ' not'
+    
+    plt.hist(all_K_hillclimber, bins = 250, color = 'red', label = f'{hillclimber_or_sim_annealing} ({alg_choice_name} start (n = {start_it}), {traject_choice_name} removed)', alpha = 0.5)
+    plt.xlabel('K', fontsize = 20)
+    plt.ylabel('frequency', fontsize=20)
+    plt.xticks(fontsize= 10)
+    plt.legend(title = 'Algorithm')
+    fig.suptitle(f"Frequency Histogram of K for all algorithms \n (n= {len(all_K_random)}), unused connections{heuristic} preferred", fontsize=25, y = 0.93)
+    
+    # save a new image if variables are changed
+    fig.savefig(f"plots/steekproef_all_{hc_sa_filename}_{start_alg}_start_{random_or_K}_traject")
+    if os.path.exists(f"plots/steekproef_all_{hc_sa_filename}_{start_alg}_start_{random_or_K}_traject"):
+        fig.savefig(f"plots/steekproef_all_{hc_sa_filename}_{start_alg}_start_{random_or_K}_traject")
+

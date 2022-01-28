@@ -68,13 +68,21 @@ def main():
         alg_choice = input("Select algorithm for initial solution: random (return r) or greedy (return g): ").upper()
         start_iterations = input("Type number of random/greedy iterations to generate start state: ")
         remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
+        sim_anneal = input("Would you like to apply simulated annealing? yes (return y) or no (return n): ")
+        if sim_anneal.upper() == "Y" or sim_anneal.upper() == "YES":
+            lin_or_exp = input("Would you like to apply linear (return l) or exponential (return e) formula?: ")
+        else:
+            lin_or_exp = None
         
         # Run hillcimber algorithm with given input
-        hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations))
+        hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations), sim_anneal, lin_or_exp)
         hillclimber.run()
 
         # Visualize K improvement of all algorithms in one graph
         vis.visualise_opt_K_all_algorithms(random.all_opt_K, greedy.all_opt_K, hillclimber.all_opt_K, prefer_unused_connection, alg_choice, start_iterations, remove_traject)
+
+        # Visualize K distribution of a sample of N iterations for all algorithms
+        vis.visualise_K_distribution_comparison(random.all_K, greedy.all_K, hillclimber.all_K, prefer_unused_connection, alg_choice, start_iterations, remove_traject, sim_anneal, lin_or_exp)
 
     # If user wants to run just one algorithm
     else:
@@ -143,8 +151,12 @@ def main():
             start_iterations = input("Type number of random/greedy iterations to generate start state: ")
             remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
             sim_anneal = input("Would you like to apply simulated annealing? yes (return y) or no (return n): ")
+            if sim_anneal.upper() == "Y" or sim_anneal.upper() == "YES":
+                lin_or_exp = input("Would you like to apply linear (return l) or exponential (return e) formula?: ")
+            else:
+                lin_or_exp = None
 
-            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations), sim_anneal)
+            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations), sim_anneal, lin_or_exp)
             hillclimber.run()
             final_graph = hillclimber.graph
 

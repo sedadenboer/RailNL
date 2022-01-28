@@ -16,6 +16,8 @@ class Greedy:
         self.iterations = iterations
         self.Nsols = int
         self.save_output = save_output
+        self.all_K = []
+        self.dict_K = dict()
         self.all_opt_K = dict()
 
     def greedy_choice(self, options):
@@ -42,6 +44,7 @@ class Greedy:
         opt_K = 0
         opt_map = self.graph
         nSolutions = 0
+        all_K = []
         all_opt_K = dict()
 
         # find stations with one connection
@@ -64,11 +67,14 @@ class Greedy:
                 new_graph.lijnvoering_kwaliteit(new_graph.used_connections, \
                                                 new_graph.available_connections, \
                                                 new_graph.lijnvoering.trajecten)
-                
+
                 # if quality higher then optimal, replace optimal results
                 if new_graph.K > opt_K:
                     opt_K = new_graph.K
                     opt_map = new_graph
+                
+                # steekproef variables
+                all_K.append(new_graph.K)
 
                 # add the current optimal K to a dictionary with the solution number as key
                 all_opt_K[nSolutions] = opt_K
@@ -76,6 +82,7 @@ class Greedy:
         # add optimal graph and K to greedy object
         self.graph = opt_map
         self.Nsols = nSolutions
+        self.all_K = all_K
         self.all_opt_K = all_opt_K
 
         # save results
