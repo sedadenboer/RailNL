@@ -22,13 +22,12 @@ class Greedy:
 
     def greedy_choice(self, options):
         """
-        Greedily choses next connection at junction by lowest duration
+        Greedy choses next connection at junction by lowest duration
         """
-
         # create dictionary of all durations
         duration_dict = dict()
         for connection in options:
-            duration_dict[connection] = connection.duration
+            duration_dict[connection] = int(connection.duration)
         
         # select option with minimum duration
         optimal_connection = min(duration_dict, key=duration_dict.get)
@@ -58,6 +57,8 @@ class Greedy:
             # if not yet all stations and max. number of trajects reached, add new traject to lijnvoering 
             while help.reached_max_depth(new_graph) == False and help.visited_all_stations(new_graph) == False:
                 help.new_traject(new_graph, start_stations, self.greedy_choice, self.prefer_unused_connection)
+
+            print(new_graph.used_connections)
 
             # only valid solution if all stations are visited
             if help.visited_all_stations(new_graph):
@@ -93,6 +94,8 @@ class Greedy:
 
             # create visualisation of result
             vis.visualise_solution_compact(opt_map, 'Greedy')
+
+            vis.visualise_solution(opt_map, 'Greedy')
 
         # create visualisation of optimal K improvement
         vis.visualise_opt_K_improvement(all_opt_K, 'Greedy')
