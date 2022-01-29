@@ -58,8 +58,6 @@ class Greedy:
             while help.reached_max_depth(new_graph) == False and help.visited_all_stations(new_graph) == False:
                 help.new_traject(new_graph, start_stations, self.greedy_choice, self.prefer_unused_connection)
 
-            print(new_graph.used_connections)
-
             # only valid solution if all stations are visited
             if help.visited_all_stations(new_graph):
                 nSolutions += 1
