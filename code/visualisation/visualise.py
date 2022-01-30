@@ -103,7 +103,7 @@ def visualise_solution_compact(final_graph, algorithm_name):
         plt.plot([y1, y2], [x1, x2], c = 'black', alpha = 1, linestyle=':')
         
         # # add duration of connection
-        plt.annotate(connection.id, ((y1 + y2) / 2,(x1 + x2) / 2), textcoords="offset points", xytext=(0,10), ha='center')
+        plt.annotate(connection.duration, ((y1 + y2) / 2,(x1 + x2) / 2), textcoords="offset points", xytext=(0,10), ha='center')
 
     connection_visited = dict()
     # for each traject, plot all connections

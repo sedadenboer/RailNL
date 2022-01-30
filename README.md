@@ -32,22 +32,25 @@ Here `n` is the number of unique trajectories shorter than 120 minutes and `r` i
 
 ### Algorithms
 #### Constraints
-To narrow down the problem and make the solution more realistic to real-life line management, there have been added a few general heuristics/constraints ("rules-of-thumb"):
+To narrow down the problem and make the solution more realistic to real-life line management, there have been added a few general constraints:
 
 * A trajectory cannot contain the same connection or station twice or more times.
 * No teleportation can take place; there has to be continued from the previous destination of the trajectory.
-* All stations have to be included in a line management solution, whereas not all connections have to be ridden.
-* A trajectory should at least contain two connections.
-* Not implemented yet/under discussion: within a line management solution, multiple trajectories can have the same beginning station or the same end station, but not both. Here the question is, where you draw the line when trajectories start to look the same?
+* All stations have to be included in a line management solution, only then a line management solution is valid.
+* A new connection is first being chosen from connections that are not yet represented in the line management solution. If this is not possible, overlap in connections is allowed.
+* The start station of a trajectory is being chosen from a list of start stations with only one connection. If these are all used, a random start station is being chosen.
 
 #### Randomise
-This algorithm picks a random beginning station and randomly picks a connection to go to the next station. It keeps adding connections to the trajectory as long as it remains within the time constraint. It also starts a new trajectory if all connections from a station have already been ridden or if the only unused connection left, leads to a station that has already been visited.
+This algorithm picks a random beginning station and randomly picks a connection to go to the next station. It keeps adding connections to the trajectory as long as it remains within the constraints. It also starts a new trajectory if all connections from a station have already been ridden or if the only unused connection left leads to a station that has already been visited. For this algorithm there is an option of finding just one valid solution (with all connections ridden) or do multiple iterations to find a solution with the highest K for this sample (not all connections have to be ridden). Another option is to prioritize unused connections while making trajectories.
 
 #### Greedy
+This algorithm is build the same as Randomise, with the exception that it always picks the shortest connection when making a trajectory. It also standardly uses iterations to find a solution with the highest K of the sample.
 
 #### Hill Climber
+Hill Climber starts with a valid start state, which is a line management solution from either Randomise or Greedy with user specified iterations. The algorithm then tries to find a more optimal K value by removing a trajectory and replacing it with a new one, again with a user specified number of iterations. There is an option to randomly remove a trajectory or remove the trajectory with the lowest partial K. To calculate the latter, `T` is initialized as 1
 
-## Prerequisits
+#### Simulated Annealing
+Simulated Annealing is an extension of the Hill Climber algorithm. [...]
 
 ## Structure of the repository
 * The program can be run with main.py and in output.csv the results are shown.
@@ -55,6 +58,25 @@ This algorithm picks a random beginning station and randomly picks a connection 
 * data filemap: csv files containing connection and station data for North- and South-Holland and The Netherlands.
 * docs filemap: images of maps and visualisations of solutions.
 * plots: analysis of some algorithms.
+* results: line management solution maps of all algorithms, including the output in csv files.
+
+## Getting started
+### Prerequisits
+This program is fully written in Python (version 3.8.10) and to run the code you will need the following libraries:
+
+* Matplotlib (used version 3.5.1)
+
+`python -m pip install -U pip`
+
+`python -m pip install -U matplotlib`
+
+* Numpy (used version 1.20.3)
+
+`pip install numpy`
+
+### Testing
+The algorithms can be run with main.py. This file will ask for user input in which you can specify which algorithm you want to run and you can specify parameters dependent on which algorithm you're choosing.
+The maps and data of line management solutions will be saved in /results/[algorithm]/[Holland/National] and the (statistical) results will be saved to /plots.
 
 ## Authors
 * [Seda den Boer](https://www.github.com/sedadenboer)
