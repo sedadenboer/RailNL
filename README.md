@@ -52,8 +52,6 @@ Hill Climber starts with a valid start state, which is a line management solutio
 #### Simulated Annealing
 Simulated Annealing is an extension of the Hill Climber algorithm. [...]
 
-## Prerequisits
-
 ## Structure of the repository
 * The program can be run with main.py and in output.csv the results are shown.
 * code filemap: files for the classes, algorithms, calculation of the state space and the visualisation can be found.
@@ -61,6 +59,21 @@ Simulated Annealing is an extension of the Hill Climber algorithm. [...]
 * docs filemap: images of maps and visualisations of solutions.
 * plots: analysis of some algorithms.
 * results: line management solution maps of all algorithms, including the output in csv files.
+
+## Getting started
+### Prerequisits
+This program is full written in Python and to run the code you will need the following libraries:
+
+* Matplotlib (used version 3.5.1)
+`python -m pip install -U pip`
+`python -m pip install -U matplotlib`
+
+* Numpy (used version 1.20.3)
+`pip install numpy`
+
+### Testing
+The algorithms can be run with main.py. This file will ask for user input in which you can specify which algorithm you want to run and you can specify parameters dependent on which algorithm you're choosing.
+The maps and data of line management solutions will be saved in /results/[algorithm]/[Holland/National] and the (statistical) results will be saved to /plots.
 
 ## Authors
 * [Seda den Boer](https://www.github.com/sedadenboer)
