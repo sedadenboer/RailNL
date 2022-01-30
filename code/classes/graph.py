@@ -24,9 +24,6 @@ class Graph():
         self.K = 0
     
 
-    def __eq__(self, other):
-        return self.age == other.age
-
     def load_stations(self, source_map):
         """
         Load all the stations into the graph.

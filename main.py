@@ -155,8 +155,13 @@ def main():
                 lin_or_exp = input("Would you like to apply linear (return l) or exponential (return e) formula?: ")
             else:
                 lin_or_exp = None
+            restart = input("Would you like to restart if state has not changed after x iterations? yes (return number of iterations) or no (return no): ")
+            if restart.upper() == "NO":
+                restart = False
+            else:
+                restart = int(restart)
 
-            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations), sim_anneal, lin_or_exp)
+            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), int(start_iterations), sim_anneal, lin_or_exp, restart)
             hillclimber.run()
             final_graph = hillclimber.graph
 

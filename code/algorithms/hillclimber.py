@@ -15,7 +15,7 @@ class Hillclimber:
     Hillclimber class that ..... (deletes Traject in Lijnvoering with lowest K)
     """
 
-    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, iterations, start_iterations, sim_anneal, lin_or_exp):
+    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, iterations, start_iterations, sim_anneal, lin_or_exp, restart):
         self.graph = copy.deepcopy(graph)
         self.iterations = iterations
         self.prefer_unused_connection = prefer_unused_connection
@@ -23,6 +23,7 @@ class Hillclimber:
         self.save_output = save_output
         self.alg_choice = alg_choice
         self.start_iterations = start_iterations
+        self.restart = restart
         self.all_K = []
         self.all_opt_K = dict()
         if sim_anneal.upper() == "Y" or sim_anneal.upper() == "YES":
@@ -155,8 +156,11 @@ class Hillclimber:
             sys.exit("Algorithm not (yet) implemented")
 
         # Determine if new solution needs to be accepted
-        if float(temperature) != 0.0:
-            acceptation_probability = 2 ** (float(new_graph.K - old_graph.K) / float(temperature))
+        print(temperature)
+        if float(temperature) > 0.0001:
+            print(float(new_graph.K - old_graph.K))
+            print(i)
+            acceptation_probability = Decimal(2 ** (Decimal(new_graph.K - old_graph.K) / Decimal(temperature)))
         else: 
             acceptation_probability = 0
         random_probability = random.random()
@@ -177,18 +181,21 @@ class Hillclimber:
         """
         print('\nloading hillclimber constructed lijnvoering...\n')
         
+
+        # save all k and optimal K
+        all_K = []
+        all_opt_K = dict() 
+        all_restart_K = dict()
+
         # generate valid start state
         if self.alg_choice.upper() == "R" or self.alg_choice.upper() == "RANDOM":
             current_state = self.random_start_state()
         elif self.alg_choice.upper() == "G" or self.alg_choice.upper() == "GREEDY":
             current_state = self.greedy_start_state()
-
-        # save all k and optimal K
-        all_K = []
-        all_opt_K = dict() 
     	
         # for i iterations:
         i = 0
+        nrepeat = 0
         while i < self.iterations:
             i += 1
 
@@ -247,14 +254,33 @@ class Hillclimber:
                 else:
                     print("current stated is not changed")
             
+            # check whether current state changed
+            if self.restart != False:
+                if current_state.lijnvoering != new_graph.lijnvoering:
+                    nrepeat += 1
+                # restart
+                if nrepeat > self.restart:
+                    all_restart_K[current_state.K] = current_state
+                    # generate valid start state
+                    if self.alg_choice.upper() == "R" or self.alg_choice.upper() == "RANDOM":
+                        current_state = self.random_start_state()
+                    elif self.alg_choice.upper() == "G" or self.alg_choice.upper() == "GREEDY":
+                        current_state = self.greedy_start_state()
+                    nrepeat = 0
+
             # steekproef variables
             all_K.append(new_graph.K)
 
             # add the current optimal K to a dictionary with the solution number as key
             all_opt_K[i] = current_state.K
 
-        # Add optimal graph to Hillclimber object
-        self.graph = current_state
+        if self.restart != False:
+            max_key = max(all_restart_K, key=int)
+            self.graph = all_restart_K[max_key]
+
+        else:
+            # Add optimal graph to Hillclimber object
+            self.graph = current_state
         self.all_K = all_K
         self.all_opt_K = all_opt_K
 
