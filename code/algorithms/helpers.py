@@ -52,7 +52,7 @@ def new_connection(chosen_connection, station_obj = None):
     
     return station1, station2, duration
 
-def unused_connection(cur_station, graph):
+def unused_connections(cur_station, graph):
     """
     at junction, check whether if connection not yet in Lijnvoering is possible
     """
@@ -99,8 +99,8 @@ def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
 
         # chose new connection ..
         # .. from connections not yet at Lijnvoering
-        if prefer_unused_connection and unused_connection(cur_station, graph): 
-                options = unused_connection(cur_station, graph)
+        if prefer_unused_connection and unused_connections(cur_station, graph): 
+            options = unused_connections(cur_station, graph)
         # .. from all connections available
         else:
             options = list(cur_station.connections.keys())
@@ -112,8 +112,10 @@ def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
 
         # if selected station is already in Traject, find new connection
         if unique_station_at_traject(cur_station, new_traject.stations):
+            options = list(cur_station.connections.keys())
             while (new_station in new_traject.stations):
-                chosen_connection = random.choice(list(cur_station.connections.keys()))
+                options.remove(chosen_connection)
+                chosen_connection = algorithm(options)
                 duration = chosen_connection.duration
                 new_station = cur_station.connections[chosen_connection]
             

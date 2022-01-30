@@ -24,6 +24,7 @@ class Greedy:
         """
         Greedy choses next connection at junction by lowest duration
         """
+        
         # create dictionary of all durations
         duration_dict = dict()
         for connection in options:
