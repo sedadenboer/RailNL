@@ -65,10 +65,12 @@ Simulated Annealing is an extension of the Hill Climber algorithm. [...]
 This program is full written in Python and to run the code you will need the following libraries:
 
 * Matplotlib (used version 3.5.1)
+
 `python -m pip install -U pip`
 `python -m pip install -U matplotlib`
 
 * Numpy (used version 1.20.3)
+
 `pip install numpy`
 
 ### Testing
