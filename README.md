@@ -62,7 +62,7 @@ Simulated Annealing is an extension of the Hill Climber algorithm. [...]
 
 ## Getting started
 ### Prerequisits
-This program is full written in Python and to run the code you will need the following libraries:
+This program is fully written in Python (version 3.8.10) and to run the code you will need the following libraries:
 
 * Matplotlib (used version 3.5.1)
 
