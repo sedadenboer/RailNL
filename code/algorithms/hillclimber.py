@@ -8,16 +8,17 @@ from code.visualisation import visualise as vis
 import random
 import copy
 import sys
+import time
 
 
 class Hillclimber:
     """
-    Hillclimber class that ..... (deletes Traject in Lijnvoering with lowest K)
+    Hillclimber class that aims to optimize K by small mutations 
     """
 
-    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, iterations, start_iterations, sim_anneal, lin_or_exp, restart):
+    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, runtime, start_iterations, sim_anneal, lin_or_exp, restart):
         self.graph = copy.deepcopy(graph)
-        self.iterations = iterations
+        self.runtime = runtime * 60
         self.prefer_unused_connection = prefer_unused_connection
         self.remove_traject = remove_traject
         self.save_output = save_output
@@ -129,7 +130,6 @@ class Hillclimber:
 
             # add new traject to Lijnvoering
             help.new_traject(graph, start_stations, random.choice, self.prefer_unused_connection)
-            print(f"add: {graph.lijnvoering.trajecten[-1].stations}")
 
             # check whether valid Lijnvoering, if not remove newly added Traject
             if help.visited_all_stations(graph) or self.sim_anneal:
@@ -182,7 +182,7 @@ class Hillclimber:
         print('\nloading hillclimber constructed lijnvoering...\n')
         
 
-        # save all k and optimal K
+        # store variables
         all_K = []
         all_opt_K = dict() 
         all_restart_K = dict()
@@ -193,25 +193,19 @@ class Hillclimber:
         elif self.alg_choice.upper() == "G" or self.alg_choice.upper() == "GREEDY":
             current_state = self.greedy_start_state()
     	
-        # for i iterations:
-        i = 0
-        nrepeat = 0
-        while i < self.iterations:
-            i += 1
+        # start parameters
+        start = time.time()
+        n_runs = 0
+        n_sols = 0
+        n_repeat = 0
+
+        while time.time() - start < self.runtime:
+            n_runs += 1
+            print(f"run: {n_runs}")
+            print("a")
 
             # copy current state
             new_graph = copy.deepcopy(current_state)
-
-            print("\n unused connections current solution")
-            print(new_graph.unused_connections)
-            print(len(new_graph.unused_connections))
-
-            # optional print statement
-            print("\nCurrent:")
-            for traject in new_graph.lijnvoering.trajecten:
-                print("Traject", new_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
-            print()
-            print(f"current optimal K: {new_graph.K}")
 
             # remove traject from Lijnvoering
             if self.remove_traject.upper() == "K":
@@ -219,79 +213,72 @@ class Hillclimber:
             elif self.remove_traject.upper() == "R":
                 new_graph = self.remove_traject_random(new_graph)
 
-            print("\n update unused connections after deleting traject")
-            print(new_graph.unused_connections)
-            print(len(new_graph.unused_connections))
-
-            # optional print statement
-            print("\nRemoved:")
-            for traject in new_graph.lijnvoering.trajecten:
-                print("Traject", new_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
-            print()
-            print(f"K when traject removed: {new_graph.K}")
-
             # add new traject till valid Lijnvoering is created
             new_graph = self.add_new_traject(new_graph)
-
-            print("\n update unused connections after adding traject")
-            print(new_graph.unused_connections)
-            print(len(new_graph.unused_connections))
-
-             # optional print statement
-            print("\nNew:")
-            for traject in new_graph.lijnvoering.trajecten:
-                print("Traject", new_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
-            print()
-            print(f"newly added K: {new_graph.K}")
-
+            print("b")  
             # Update current state, optionally by simulated annealing
             if self.sim_anneal:
-                current_state = self.simulated_annealing(i, new_graph, current_state)
-            else:
-                if new_graph.K > current_state.K:
-                    print("current stated is changed")
-                    current_state = new_graph
-                else:
-                    print("current stated is not changed")
+                current_state = self.simulated_annealing(n_runs, new_graph, current_state)
+            elif new_graph.K > current_state.K:
+                current_state = new_graph
             
-            # check whether current state changed
-            if self.restart != False:
-                if current_state.lijnvoering != new_graph.lijnvoering:
-                    nrepeat += 1
-                # restart
-                if nrepeat > self.restart:
-                    all_restart_K[current_state.K] = current_state
-                    # generate valid start state
-                    if self.alg_choice.upper() == "R" or self.alg_choice.upper() == "RANDOM":
-                        current_state = self.random_start_state()
-                    elif self.alg_choice.upper() == "G" or self.alg_choice.upper() == "GREEDY":
-                        current_state = self.greedy_start_state()
-                    nrepeat = 0
-
-            # steekproef variables
+            # save K values
             all_K.append(new_graph.K)
+            all_opt_K[n_runs] = current_state.K
+            print("c") 
+            # check whether current state has changed
+            if current_state.lijnvoering != new_graph.lijnvoering:
+                n_repeat += 1
+            else:
+                n_sols += 1
+                print(f"solutions: {n_sols}")
+            
+            # at restart, save current state and generate new start state
+            if self.restart != False and n_repeat > self.restart:
+                all_restart_K[current_state.K] = current_state
+                if self.alg_choice.upper() == "R" or self.alg_choice.upper() == "RANDOM":
+                    current_state = self.random_start_state()
+                elif self.alg_choice.upper() == "G" or self.alg_choice.upper() == "GREEDY":
+                    current_state = self.greedy_start_state()
+                n_repeat = 0
 
-            # add the current optimal K to a dictionary with the solution number as key
-            all_opt_K[i] = current_state.K
-
+        # if restart applied, save graph with highest K
         if self.restart != False:
             max_key = max(all_restart_K, key=int)
             self.graph = all_restart_K[max_key]
 
+        # else, save current graph
         else:
-            # Add optimal graph to Hillclimber object
             self.graph = current_state
+
         self.all_K = all_K
         self.all_opt_K = all_opt_K
 
         # save results
         if self.save_output == True:
 
+            # file name
+            extension = ''
+            if self.prefer_unused_connection:
+                extension += '_prefer_unused'
+            if self.alg_choice.upper() == "R" or self.alg_choice.upper() == "RANDOM":
+                extension += '_random_start'
+            else:
+                extension += '_greedy_start'
+            if self.remove_traject.upper() == "K":
+                extension += '_remove_K'
+            else:
+                extension += '_remove_random'
+            if self.sim_anneal:
+                extension += '_sim_anneal'
+            if self.restart != False:
+                extension += '_restart'
+            
             # write result out to csv
-            help.write_output_to_csv(self.graph, 'Hillclimber')
+            help.write_output_to_csv(self.graph, 'Hillclimber', extension)
             
             # create compact visualisation of result
-            vis.visualise_solution_compact(self.graph, 'Hillclimber')
+            vis.visualise_solution_compact(self.graph, 'Hillclimber', extension)
 
             # create visualisation of optimal K improvement
-            vis.visualise_opt_K_improvement(all_opt_K, 'Hillclimber', self.alg_choice, self.start_iterations, self.remove_traject)
+            vis.visualise_opt_K_improvement(all_opt_K, 'Hillclimber', extension)

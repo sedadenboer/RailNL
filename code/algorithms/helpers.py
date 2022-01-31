@@ -156,13 +156,13 @@ def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
     # if Traject is finished, add Traject to Lijnvoering 
     graph.lijnvoering.add_traject(new_traject)
 
-def write_output_to_csv(final_graph, algorithm_name):
+def write_output_to_csv(final_graph, algorithm_name, extension):
 
     # create filename based on region and algorithm
     if final_graph.max_trajects == 7:
-        file = 'results/' + str(algorithm_name) + '/Holland/output.csv'
+        file = 'results/' + str(algorithm_name) + '/Holland/output' + str(extension) + '.csv'
     else:
-        file = 'results/' + str(algorithm_name) + '/Nationaal/output.csv'
+        file = 'results/' + str(algorithm_name) + '/Nationaal/output'  + str(extension) + '.csv'
 
     # create csv file
     with open(file, 'w', encoding='UTF8') as f:
