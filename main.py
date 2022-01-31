@@ -81,16 +81,17 @@ def main():
         # Visualize K distribution of a sample of N iterations for all algorithms
         vis.visualise_K_distribution_comparison(random.all_K, greedy.all_K, hillclimber.all_K, prefer_unused_connection, alg_choice, start_iterations, remove_traject, sim_anneal, lin_or_exp)
 
-    # If user wants to run just one algorithm
+    #--------------------------------------- Implement single algorithm ----------------------------------------
     else:
-        # Ask user for algorithm to apply
+        
+        #--------------------------------------- User Input ----------------------------------------
         algorithm = input("Select algorithm: random (return r), greedy (return g) or hillclimber (return hc): ")
         
         if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
             question = input("Select goal: 1 solution (all connection, return 1) or optimal solution (return 2): ")
 
         if ((algorithm.upper() == "R" or algorithm.upper() == "RANDOM") and question == '2') or (algorithm.upper() != "R"):
-            runtime = input("Type runtime in minutes: ")
+            runtime = input("Type runtime in seconds: ")
         
         # Ask user to apply heuristic yes or no
         prefer_unused_connection = input("Would you like to give unused connections priority? yes (return y) no return (n): ")
@@ -110,8 +111,7 @@ def main():
         else:
             sys.exit("Not a valid input")
 
-        #--------------------------------------- Implement single algorithm ----------------------------------------
-
+        #--------------------------------------- Implement algorithm ----------------------------------------
         if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
 
             # Question 1.1
@@ -147,21 +147,20 @@ def main():
 
             # additional questions
             alg_choice = input("Select algorithm for initial solution: random (return r) or greedy (return g): ").upper()
-            start_iterations = input("Type number of random/greedy iterations to generate start state: ")
             remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
             sim_anneal = input("Would you like to apply simulated annealing? yes (return y) or no (return n): ")
             if sim_anneal.upper() == "Y" or sim_anneal.upper() == "YES":
                 lin_or_exp = input("Would you like to apply linear (return l) or exponential (return e) formula?: ")
             else:
                 lin_or_exp = None
-            restart = input("Would you like to restart if state has not changed after x iterations? yes (return number of iterations) or no (return no): ")
-            if restart.upper() == "NO":
+            restart = input("Would you like to restart if state has not changed after x iterations? yes (return number of iterations) or no (return n): ")
+            if restart.upper() == "N":
                 restart = False
             else:
                 restart = int(restart)
 
             # create object and run algorithm
-            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(runtime), int(start_iterations), sim_anneal, lin_or_exp, restart)
+            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(runtime), sim_anneal, lin_or_exp, restart)
             hillclimber.run()
             final_graph = hillclimber.graph
 

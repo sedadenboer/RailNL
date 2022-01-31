@@ -16,14 +16,13 @@ class Hillclimber:
     Hillclimber class that aims to optimize K by small mutations 
     """
 
-    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, runtime, start_iterations, sim_anneal, lin_or_exp, restart):
+    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, runtime, sim_anneal, lin_or_exp, restart):
         self.graph = copy.deepcopy(graph)
-        self.runtime = runtime * 60
+        self.runtime = runtime 
         self.prefer_unused_connection = prefer_unused_connection
         self.remove_traject = remove_traject
         self.save_output = save_output
         self.alg_choice = alg_choice
-        self.start_iterations = start_iterations
         self.restart = restart
         self.all_K = []
         self.all_opt_K = dict()
@@ -37,7 +36,7 @@ class Hillclimber:
         """
         Generates random start solution for hillclimber by random algorithm.
         """
-        random_alg = Random(self.graph, self.prefer_unused_connection, False, self.start_iterations)
+        random_alg = Random(self.graph, self.prefer_unused_connection, False, 1)
         random_alg.run_opt_sol()
 
         new_graph = random_alg.graph
@@ -48,7 +47,7 @@ class Hillclimber:
         """
         Generates greedy start solution for hillclimber by greedy algorithm.
         """
-        greedy_alg = Greedy(self.graph, self.prefer_unused_connection, False, self.start_iterations)
+        greedy_alg = Greedy(self.graph, self.prefer_unused_connection, False, 1)
         greedy_alg.run()
 
         new_graph = greedy_alg.graph
@@ -76,7 +75,6 @@ class Hillclimber:
         traject_to_remove = random.choice(graph.lijnvoering.trajecten)
 
         # remove traject and update variables
-        print(f"remove: {traject_to_remove.stations}")
         graph.lijnvoering.trajecten.remove(traject_to_remove)
         graph.update_variables()
 
@@ -105,7 +103,6 @@ class Hillclimber:
                 bad_traject = traject
         
         # remove traject from lijnvoering
-        print(f"remove: {bad_traject.stations}")
         graph.lijnvoering.trajecten.remove(bad_traject)
         graph.update_variables()
 
@@ -169,7 +166,6 @@ class Hillclimber:
         else:
             return old_graph
 
-
     def run(self):
         """
         Algorithm that implements the hillclimber algorithm:
@@ -180,7 +176,6 @@ class Hillclimber:
         - This algorithm is repeated a particular number of times 
         """
         print('\nloading hillclimber constructed lijnvoering...\n')
-        
 
         # store variables
         all_K = []
@@ -202,7 +197,6 @@ class Hillclimber:
         while time.time() - start < self.runtime:
             n_runs += 1
             print(f"run: {n_runs}")
-            print("a")
 
             # copy current state
             new_graph = copy.deepcopy(current_state)
@@ -215,7 +209,7 @@ class Hillclimber:
 
             # add new traject till valid Lijnvoering is created
             new_graph = self.add_new_traject(new_graph)
-            print("b")  
+            
             # Update current state, optionally by simulated annealing
             if self.sim_anneal:
                 current_state = self.simulated_annealing(n_runs, new_graph, current_state)
@@ -225,7 +219,7 @@ class Hillclimber:
             # save K values
             all_K.append(new_graph.K)
             all_opt_K[n_runs] = current_state.K
-            print("c") 
+            
             # check whether current state has changed
             if current_state.lijnvoering != new_graph.lijnvoering:
                 n_repeat += 1

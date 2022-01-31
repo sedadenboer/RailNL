@@ -12,7 +12,7 @@ class Random:
     """
     def __init__(self, graph, prefer_unused_connection, save_output, runtime = None):
         self.graph = copy.deepcopy(graph)
-        self.runtime = runtime * 60
+        self.runtime = runtime
         self.prefer_unused_connection = prefer_unused_connection
         self.Nsols = int
         self.all_K = []

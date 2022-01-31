@@ -14,7 +14,7 @@ class Greedy:
     def __init__(self, graph, prefer_unused_connection, save_output, runtime):
         self.graph = copy.deepcopy(graph)
         self.prefer_unused_connection = prefer_unused_connection
-        self.runtime = runtime * 60
+        self.runtime = runtime 
         self.Nsols = int
         self.save_output = save_output
         self.all_K = []
