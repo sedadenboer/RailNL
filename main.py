@@ -90,8 +90,10 @@ def main():
         if algorithm.upper() == "R" or algorithm.upper() == "RANDOM":
             question = input("Select goal: 1 solution (all connection, return 1) or optimal solution (return 2): ")
 
-        if ((algorithm.upper() == "R" or algorithm.upper() == "RANDOM") and question == '2') or (algorithm.upper() != "R"):
+        if ((algorithm.upper() == "R" or algorithm.upper() == "RANDOM") and question == '2') or (algorithm.upper() != "R" and algorithm.upper() != "HC") :
             runtime = input("Type runtime in seconds: ")
+        elif (algorithm.upper() == "HC"):
+            iterations = input("type number of iterations: ")
         
         # Ask user to apply heuristic yes or no
         prefer_unused_connection = input("Would you like to give unused connections priority? yes (return y) no return (n): ")
@@ -160,7 +162,7 @@ def main():
                 restart = int(restart)
 
             # create object and run algorithm
-            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(runtime), sim_anneal, lin_or_exp, restart)
+            hillclimber = hc.Hillclimber(railway_map, prefer_unused_connection, save_output, alg_choice, remove_traject, int(iterations), sim_anneal, lin_or_exp, restart)
             hillclimber.run()
             final_graph = hillclimber.graph
 

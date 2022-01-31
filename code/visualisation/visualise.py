@@ -241,8 +241,6 @@ def visualise_opt_K_improvement(all_opt_K, algorithm_name, extension):
     """
     print("\nLoading visualisation of improvement K over iterations ...\n")
 
-    print(all_opt_K)
-    
     fig = plt.figure(figsize=(20,20))
     plt.plot(all_opt_K.keys(), all_opt_K.values(), color = 'black')
     plt.xlabel('iterations', fontsize = 20, labelpad=25)

@@ -16,12 +16,12 @@ class Hillclimber:
     Hillclimber class that aims to optimize K by small mutations 
     """
 
-    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, runtime, sim_anneal, lin_or_exp, restart):
+    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, iterations, sim_anneal, lin_or_exp, restart):
         self.graph = copy.deepcopy(graph)
-        self.runtime = runtime 
         self.prefer_unused_connection = prefer_unused_connection
         self.remove_traject = remove_traject
         self.save_output = save_output
+        self.iterations = iterations
         self.alg_choice = alg_choice
         self.restart = restart
         self.all_K = []
@@ -153,10 +153,7 @@ class Hillclimber:
             sys.exit("Algorithm not (yet) implemented")
 
         # Determine if new solution needs to be accepted
-        print(temperature)
         if float(temperature) > 0.0001:
-            print(float(new_graph.K - old_graph.K))
-            print(i)
             acceptation_probability = Decimal(2 ** (Decimal(new_graph.K - old_graph.K) / Decimal(temperature)))
         else: 
             acceptation_probability = 0
@@ -194,7 +191,7 @@ class Hillclimber:
         n_sols = 0
         n_repeat = 0
 
-        while time.time() - start < self.runtime:
+        while n_runs < self.iterations:
             n_runs += 1
             print(f"run: {n_runs}")
 
@@ -247,6 +244,9 @@ class Hillclimber:
 
         self.all_K = all_K
         self.all_opt_K = all_opt_K
+
+        # print time
+        print(f"\n time passed: {time.time() - start}")
 
         # save results
         if self.save_output == True:
