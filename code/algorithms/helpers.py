@@ -38,7 +38,7 @@ def start_new_traject(graph, station1, station2, duration, chosen_connection):
 
     return new_traject, cur_station
 
-def new_connection(chosen_connection, station_obj = None):
+def first_connection(chosen_connection, station_obj = None):
     """
     find connection variables based on chosen connection
     """
@@ -51,6 +51,16 @@ def new_connection(chosen_connection, station_obj = None):
         duration = chosen_connection.duration
     
     return station1, station2, duration
+
+def new_connection(algorithm, options, cur_station):
+    """
+    find new connection by algoritm and options
+    """
+    chosen_connection = algorithm(options)
+    duration = chosen_connection.duration
+    new_station = cur_station.connections[chosen_connection]
+    
+    return chosen_connection, duration, new_station
 
 def unused_connections(cur_station, graph):
     """
@@ -68,6 +78,7 @@ def unique_station_at_traject(cur_station, stations_at_traject):
 
     return not all(item in stations_at_traject for item in con_stations) 
 
+
 def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
     """
     create new Traject and add to Lijnvoering
@@ -78,17 +89,19 @@ def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
         station_obj = start_stations[len(graph.lijnvoering.trajecten)]
         chosen_connection = list(station_obj.connections.keys())[0]
         chosen_connection = graph.available_connections[int(chosen_connection.id)-1]
-        [station1, station2, duration] = new_connection(chosen_connection, station_obj)
+        [station1, station2, duration] = first_connection(chosen_connection, station_obj)
 
     # else, randomly select start station ..
     else:
+       
         # .. from unused connections @ lijnvoering
         if prefer_unused_connection and len(graph.unused_connections) != 0:
             chosen_connection = random.choice(list(graph.unused_connections))
+        
         # .. from all connections availble
         else:
             chosen_connection = random.choice(list(graph.available_connections))
-        [station1, station2, duration] = new_connection(chosen_connection)
+        [station1, station2, duration] = first_connection(chosen_connection)
     
     # start new traject
     [new_traject, cur_station] = start_new_traject(graph, station1, station2, duration, chosen_connection)
@@ -97,27 +110,35 @@ def new_traject(graph, start_stations, algorithm, prefer_unused_connection):
     extend_traject = True
     while extend_traject:
 
-        # chose new connection ..
-        # .. from connections not yet at Lijnvoering
+        # chose new connection from unused or all connections 
         if prefer_unused_connection and unused_connections(cur_station, graph): 
             options = unused_connections(cur_station, graph)
-        # .. from all connections available
         else:
             options = list(cur_station.connections.keys())
 
         # select next part of Traject by algorithm
-        chosen_connection = algorithm(options)
-        duration = chosen_connection.duration
-        new_station = cur_station.connections[chosen_connection]
+        chosen_connection, duration, new_station = new_connection(algorithm, options, cur_station)
 
-        # if selected station is already in Traject, find new connection
+        # if selected station is already in Traject..
         if unique_station_at_traject(cur_station, new_traject.stations):
-            options = list(cur_station.connections.keys())
-            while (new_station in new_traject.stations):
-                options.remove(chosen_connection)
-                chosen_connection = algorithm(options)
-                duration = chosen_connection.duration
-                new_station = cur_station.connections[chosen_connection]
+
+            # .. find new connection from all connections
+            if not prefer_unused_connection:
+                options = list(cur_station.connections.keys())
+                while (new_station in new_traject.stations):
+                    options.remove(chosen_connection)
+                    chosen_connection, duration, new_station = new_connection(algorithm, options, cur_station)
+            
+            # .. first try to find new connection from unused connections
+            else:
+                options = unused_connections(cur_station, graph)
+                while (new_station in new_traject.stations) and len(options) > 1: 
+                    options.remove(chosen_connection)
+                    chosen_connection, duration, new_station = new_connection(algorithm, options, cur_station)
+                options = list(cur_station.connections.keys())
+                while (new_station in new_traject.stations): 
+                    options.remove(chosen_connection)
+                    chosen_connection, duration, new_station = new_connection(algorithm, options, cur_station)
             
             # add valid connection to traject if within time constraint 
             if new_traject.update_traject(new_station, int(float(duration)), chosen_connection, graph.max_duration) == True:
