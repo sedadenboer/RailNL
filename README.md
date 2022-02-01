@@ -62,21 +62,17 @@ Simulated Annealing is an extension of the Hill Climber algorithm. [...]
 
 ## Getting started
 ### Prerequisits
-This program is fully written in Python (version 3.8.10) and to run the code you will need the following libraries:
+This program is fully written in Python (version 3.8.10) and to run the code you will need some dependencies that can be installed with the follwoing line of code:
 
-* Matplotlib (used version 3.5.1)
-
-`python -m pip install -U pip`
-
-`python -m pip install -U matplotlib`
-
-* Numpy (used version 1.20.3)
-
-`pip install numpy`
+`pip install -r requirements.txt`
 
 ### Testing
 The algorithms can be run with main.py. This file will ask for user input in which you can specify which algorithm you want to run and you can specify parameters dependent on which algorithm you're choosing.
 The maps and data of line management solutions will be saved in /results/[algorithm]/[Holland/National] and the (statistical) results will be saved to /plots.
+
+The following diagram displays all the options and combinations that can be run:
+
+![Algorithm tree](docs/algorithm_tree.png)
 
 ## Authors
 * [Seda den Boer](https://www.github.com/sedadenboer)
