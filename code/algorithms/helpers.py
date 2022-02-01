@@ -179,3 +179,26 @@ def write_output_to_csv(final_graph, algorithm_name, extension):
         # write the footer
         writer.writerow(['score', final_graph.K])
 
+
+
+def write_to_csv(final_graph, all_K, all_opt_K, algorithm_name, extension):
+
+    # create filename based on region and algorithm
+    if final_graph.max_trajects == 7:
+        file_all_K = 'data/' + str(algorithm_name) + '_Holland_all_K' + str(extension) + '.csv'
+        file_opt_K = 'data/' + str(algorithm_name) + '_Holland_opt_K' + str(extension) + '.csv'
+    else:
+        file_all_K = 'data/' + str(algorithm_name) + '_Nationaal_all_K'  + str(extension) + '.csv'
+        file_opt_K = 'data/' + str(algorithm_name) + '_Nationaal_opt_K' + str(extension) + '.csv'
+
+    # create csv file for all_K (List)
+    with open(file_all_K, 'w', encoding='UTF8') as f:
+        writer = csv.writer(f)
+        writer.writerow(all_K)
+    
+    # create csv file for opt_K (Dictionairy)
+    with open(file_opt_K, 'w', encoding='UTF8') as f:
+        for key in all_opt_K.keys():
+            f.write("%s,%s\n" % (key, all_opt_K[key]))
+
+ 

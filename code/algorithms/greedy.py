@@ -111,3 +111,6 @@ class Greedy:
             # create visualisation of optimal K improvement
             vis.visualise_opt_K_improvement(all_opt_K, 'Greedy', extension)
 
+            # write out to csv all K (for distribution) all opt K (for iterations)
+            help.write_to_csv(self.graph, all_K, all_opt_K, 'Greedy', extension)
+
