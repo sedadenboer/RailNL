@@ -50,7 +50,7 @@ This algorithm is build the same as Randomise, with the exception that it always
 Hill Climber starts with a valid start state, which is a line management solution from either Randomise or Greedy with user specified iterations. The algorithm then tries to find a more optimal K value by removing a trajectory and replacing it with a new one, again with a user specified number of iterations. There is an option to randomly remove a trajectory or remove the trajectory with the lowest partial K. To calculate the latter, `T` is initialized as 1
 
 #### Simulated Annealing
-Simulated Annealing is an extension of the Hill Climber algorithm. [...]
+Simulated Annealing is an extension of the Hill Climber algorithm. With every new state it calculates an acceptance probability with the help of a so called 'temperature' formula which can be linear or exponential. In this situation, states with lower K scores can also be accepted.
 
 ## Structure of the repository
 * The program can be run with main.py and in output.csv the results are shown.
