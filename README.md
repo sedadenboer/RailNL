@@ -50,7 +50,7 @@ This algorithm is build the same as Randomise, with the exception that it always
 Hill Climber starts with a valid start state, which is a line management solution from either Randomise or Greedy with user specified iterations. The algorithm then tries to find a more optimal K value by removing a trajectory and replacing it with a new one, again with a user specified number of iterations. There is an option to randomly remove a trajectory or remove the trajectory with the lowest partial K. To calculate the latter, `T` is initialized as 1
 
 #### Simulated Annealing
-Simulated Annealing is an extension of the Hill Climber algorithm. With every new state it calculates an acceptance probability with the help of a so called 'temperature' formula which can be linear or exponential. In this situation, states with lower K scores can also be accepted.
+Simulated Annealing is an extension of the Hill Climber algorithm. With every new state it calculates an acceptance probability with the help of a so called 'temperature' formula which can be linear or exponential. In this situation, states with lower K scores can also be accepted. This way, you can get out of a local optimum the Hill Climber algorithm might have gotten into.
 
 ## Structure of the repository
 * The program can be run with main.py and in output.csv the results are shown.
@@ -62,12 +62,12 @@ Simulated Annealing is an extension of the Hill Climber algorithm. With every ne
 
 ## Getting started
 ### Prerequisits
-This program is fully written in Python (version 3.8.10) and to run the code you will need some dependencies that can be installed with the follwoing line of code:
+This program is fully written in [Python (3.8.10)](https://www.python.org/downloads/) and to run the code you will need some dependencies that can be installed with the follwoing line of code:
 
 `pip install -r requirements.txt`
 
 ### Testing
-The algorithms can be run with main.py. This file will ask for user input in which you can specify which algorithm you want to run and you can specify parameters dependent on which algorithm you're choosing.
+The algorithms can be run with `python main.py`. This file will ask for user input in which you can specify which algorithm you want to run and you can specify parameters dependent on which algorithm you're choosing.
 The maps and data of line management solutions will be saved in /results/[algorithm]/[Holland/National] and the (statistical) results will be saved to /plots.
 
 The following diagram displays all the options and combinations that can be run:
