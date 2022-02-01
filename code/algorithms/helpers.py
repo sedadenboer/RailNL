@@ -201,4 +201,9 @@ def write_to_csv(final_graph, all_K, all_opt_K, algorithm_name, extension):
         for key in all_opt_K.keys():
             f.write("%s,%s\n" % (key, all_opt_K[key]))
 
+def print_statement_main(final_graph):
+     
+    print("Found optimal K of:", final_graph.K)
+    for traject in final_graph.lijnvoering.trajecten:
+        print("Traject", final_graph.lijnvoering.trajecten.index(traject), "\n", ", ".join(traject.stations))
  

@@ -1,6 +1,37 @@
 from matplotlib import pyplot as plt
 import numpy as np
 import os
+import sys
+from csv import reader
+
+def start_comparing(goal):
+    
+    all_files = os.listdir("./data/")
+    compare_all_K = []
+    compare_opt_K = []
+
+    # select all files to compare
+    for file in all_files:
+        
+        # based on answer, add file to list
+        if (('all_K' in file) and (goal.upper() == "D" or goal.upper() == "B")) \
+            or (('opt_K' in file) and (goal.upper() == "I" or goal.upper() == "B")):
+            add = input(f"Would you like to add {file} to comparison? yes (return y), no return (n): ")
+        
+            if add.upper() != "Y" and add.upper() != "N":
+                sys.exit("No valid input")
+
+            if ('all_K' in file) and (goal.upper() == "D" or goal.upper() == "B") and add.upper() == "Y":
+                compare_all_K.append(file)
+            elif  ('opt_K' in file) and (goal.upper() == "I" or goal.upper() == "B") and add.upper() == "Y":
+                compare_opt_K.append(file)
+    
+    # start visualisation
+    if len(compare_all_K) != 0:
+        visualise_K_distribution_comparison(compare_all_K)
+    if len(compare_opt_K) != 0:
+        visualise_opt_K_all_algorithms(compare_opt_K)
+    
 
 def visualise_start(railway_map, map_name):
     """
@@ -256,119 +287,174 @@ def visualise_opt_K_improvement(all_opt_K, algorithm_name, extension):
     fig.savefig(file)
 
 
-def visualise_opt_K_all_algorithms(opt_K_random, opt_K_greedy, opt_K_hillclimber, prefer_unused_connections, start_alg, start_it, random_or_K):
+def visualise_opt_K_all_algorithms(compare_opt_K):
     """
     Visualize how the optimal K compares for all algorithms after n iterations
     """
     print("\nLoading visualisation of optimal K all algorithms ...\n")
     
     fig = plt.figure(figsize=(20,20))
-    plt.plot(opt_K_random.keys(), opt_K_random.values(), color = 'blue', label = 'random')
-    plt.plot(opt_K_greedy.keys(), opt_K_greedy.values(), color = 'green', label = 'greedy')
-    if start_alg.upper() == "R":
-        start_alg = "Random"
-    else:
-        start_alg = "Greedy"
-    if random_or_K.upper() == "R":
-        random_or_K = "Random Traject"
-    else:
-        random_or_K = "Traject with lowest K"
-    plt.plot(opt_K_hillclimber.keys(), opt_K_hillclimber.values(), color = 'red', label = f'hillclimber ({start_alg} start (n = {start_it}), {random_or_K} removed)')
+
+    # select colors for all distributions
+    colors = []
+    cm = plt.get_cmap('gist_rainbow')
+    for i in range(len(compare_opt_K)):
+        colors.append(cm(i/len(compare_opt_K)))
+
+    # loop over all solutions
+    all_values = []
+    all_names = []
+    for file in compare_opt_K:
+    
+        # retrieve name from file_name
+        if 'Random' in file:
+            name = 'Random'
+        elif 'Greedy' in file:
+            name = 'Greedy'
+        elif 'Hillclimber' in file:
+            name = 'Hillclimber'
+            if 'remove_K' in file:
+                name += ' / remove K'
+            else:
+                name += ' / remove random'
+            if 'random_start' in file:
+                name += ' / random start'
+            else:
+                name += ' / greedy start'
+            if 'sim_anneal' in file:
+                name += ' / sim anneal'
+            if 'restart' in file:
+                name += ' / restart'
+        if 'prefer_unused' in file: 
+            name += ' / prefer unused'
+
+        all_names.append(name)
+
+        # add values
+        with open('data/'+ file, 'r') as read_obj:
+            values = []
+            for row in reader(read_obj):
+                values.append(float(row[1]))
+        
+        all_values.append(values)
+
+    # create plot
+    min_iterations = min(map(len, all_values))
+    counter = 0
+    for i in range(len(all_values)):
+        plt.plot(list(range(min_iterations)), all_values[i][:min_iterations], color = colors[counter], label = all_names[i])
+        counter += 1
+    
+    # add titles etc.
     plt.xlabel('iterations', fontsize = 20)
     plt.ylabel('K', fontsize = 20)
     plt.legend(title = 'Algorithm')
+    fig.suptitle(f"Improvement K over iterations", fontsize=25, y = 0.93)
+    
+    # save a new image if variables are changed
+    fig.savefig(f"plots/compare_distributions_K")
 
-    if prefer_unused_connections:
-        heuristic = ''
-    else:
-        heuristic = ' not'
 
-    fig.suptitle(f"Improvement of K after {len(opt_K_random.keys())} iterations, unused connections{heuristic} preferred", fontsize = 25, y = 0.93)
-    fig.savefig("plots/All_K_Improvement")
 
-def visualise_K_distribution_comparison(all_K_random, all_K_greedy, all_K_hillclimber, prefer_unused_connections, start_alg, start_it, random_or_K, sim_anneal, lin_or_exp):
+def visualise_K_distribution_comparison(compare_all_K):
     """
     Visualize the distribution of K in a histogram for all algorithms.
     """
     print("\nLoading visualisation of distribution of K ...\n")
 
     fig = plt.figure(figsize=(20,20))
-    plt.hist(all_K_random, bins = 250, color = 'blue', label = 'random', alpha = 0.5)
-    plt.hist(all_K_greedy, bins = 250, color = 'green', label = 'greedy', alpha = 0.5)
 
-    alg_choice_name = ""
-    traject_choice_name = ""
-    hc_sa_filename = "hillclimber"
-    hillclimber_or_sim_annealing = "hillclimber"
+    # select colors for all distributions
+    colors = []
+    cm = plt.get_cmap('gist_rainbow')
+    for i in range(len(compare_all_K)):
+        colors.append(cm(i/len(compare_all_K)))
 
-    if start_alg.upper() == "R":
-        alg_choice_name = "Random"
-    else:
-        alg_choice_name = "Greedy"
-    if random_or_K.upper() == "R":
-        traject_choice_name = "Random Traject"
-    else:
-        traject_choice_name = "Traject with lowest K"
-
-    if sim_anneal.upper() == "Y" or sim_anneal.upper() == "YES":
-        if lin_or_exp.upper() == "L":
-            hillclimber_or_sim_annealing = "simulated annealing, linear"
-            hc_sa_filename = "sim_anneal_lin"
-        elif lin_or_exp.upper() == "E":
-            hillclimber_or_sim_annealing = "simulated annealing, exponential"
-            hc_sa_filename = "sim_anneal_exp"
-
-    if prefer_unused_connections:
-        heuristic = ''
-    else:
-        heuristic = ' not'
+    # loop over all solutions
+    all_names = []
+    all_values = []
+    for file in compare_all_K:
     
-    plt.hist(all_K_hillclimber, bins = 250, color = 'red', label = f'{hillclimber_or_sim_annealing} ({alg_choice_name} start (n = {start_it}), {traject_choice_name} removed)', alpha = 0.5)
+        # retrieve name from file_name
+        if 'Random' in file:
+            name = 'Random'
+        elif 'Greedy' in file:
+            name = 'Greedy'
+        elif 'Hillclimber' in file:
+            name = 'Hillclimber'
+            if 'remove_K' in file:
+                name += ' / remove K'
+            else:
+                name += ' / remove random'
+            if 'random_start' in file:
+                name += ' / random start'
+            else:
+                name += ' / greedy start'
+            if 'sim_anneal' in file:
+                name += ' / sim anneal'
+            if 'restart' in file:
+                name += ' / restart'
+        if 'prefer_unused' in file: 
+            name += ' / prefer unused'
+        all_names.append(name)
+
+        with open('data/'+ file, 'r') as read_obj:
+            
+            # csv => list => histogram
+            all_K = list(reader(read_obj))[0]
+            all_K = [float(item) for item in all_K]
+            all_values.append(all_K)
+    
+    # create plot
+    min_iterations = min(map(len, all_values))
+    counter = 0
+    for i in range(len(all_values)):
+        plt.hist(all_values[i][:min_iterations], bins = 250, color = colors[counter], label = all_names[i], alpha = 0.5)
+        counter += 1
+
+    # add titles, legenda and ticks to figure
     plt.xlabel('K', fontsize = 20)
     plt.ylabel('frequency', fontsize=20)
     plt.xticks(fontsize= 10)
     plt.legend(title = 'Algorithm')
-    fig.suptitle(f"Frequency Histogram of K for all algorithms \n (n= {len(all_K_random)}), unused connections{heuristic} preferred", fontsize=25, y = 0.93)
+    fig.suptitle(f"Frequency Histogram of K", fontsize=25, y = 0.93)
     
     # save a new image if variables are changed
-    fig.savefig(f"plots/steekproef_all_{hc_sa_filename}_{start_alg}_start_{random_or_K}_traject")
-    if os.path.exists(f"plots/steekproef_all_{hc_sa_filename}_{start_alg}_start_{random_or_K}_traject"):
-        fig.savefig(f"plots/steekproef_all_{hc_sa_filename}_{start_alg}_start_{random_or_K}_traject")
+    fig.savefig(f"plots/compare_distributions_K")
 
 
+# def visualise_steekproef(all_K):
+#     """
+#     Visualisation code that displays the found 'lijnvoering'
+#     """
+#     fig = plt.figure(figsize=(20,20))
+#     plt.hist(all_K, bins = 250, color = 'grey', density = False)
+#     plt.xlabel('K', fontsize = 20)
+#     plt.ylabel('frequency', fontsize=20)
+#     plt.xticks(fontsize= 10)
+#     fig.suptitle(f"Frequency Histogram of K generated by Random Algorithm \n (n= {len(all_K)}, mean = {round(np.mean(all_K),2)}, var = {round(np.var(all_K),2)})", fontsize=25, y = 0.93)
+#     fig.savefig(f"plots/steekproef")
 
-def visualise_steekproef(all_K):
-    """
-    Visualisation code that displays the found 'lijnvoering'
-    """
-    fig = plt.figure(figsize=(20,20))
-    plt.hist(all_K, bins = 250, color = 'grey', density = False)
-    plt.xlabel('K', fontsize = 20)
-    plt.ylabel('frequency', fontsize=20)
-    plt.xticks(fontsize= 10)
-    fig.suptitle(f"Frequency Histogram of K generated by Random Algorithm \n (n= {len(all_K)}, mean = {round(np.mean(all_K),2)}, var = {round(np.var(all_K),2)})", fontsize=25, y = 0.93)
-    fig.savefig(f"plots/steekproef")
+# def visualise_steekproef_by_trajects(dict_K):
+#     """
+#     Visualisation code that displays the found 'lijnvoering'
+#     """
 
-def visualise_steekproef_by_trajects(dict_K):
-    """
-    Visualisation code that displays the found 'lijnvoering'
-    """
-
-    # select colors for number of trajects
+#     # select colors for number of trajects
     
-    colors = ['red', 'green', 'blue', 'purple']
+#     colors = ['red', 'green', 'blue', 'purple']
 
-    fig = plt.figure(figsize=(20,20))
-    i = 0
-    tot_obs = 0
-    for key in dict_K.keys():
-        plt.hist(dict_K[key], bins = 250, color = colors[i], density = False, label=f"{key} (mean = {round(np.mean(dict_K[key]),2)}, var = {round(np.var(dict_K[key]),2)})")
-        i += 1
-        tot_obs += len(dict_K[key])
-    plt.xlabel('K', fontsize = 20)
-    plt.ylabel('frequency', fontsize=20)
-    plt.xticks(fontsize= 10)
-    plt.legend(title = "Number of trajects")
+#     fig = plt.figure(figsize=(20,20))
+#     i = 0
+#     tot_obs = 0
+#     for key in dict_K.keys():
+#         plt.hist(dict_K[key], bins = 250, color = colors[i], density = False, label=f"{key} (mean = {round(np.mean(dict_K[key]),2)}, var = {round(np.var(dict_K[key]),2)})")
+#         i += 1
+#         tot_obs += len(dict_K[key])
+#     plt.xlabel('K', fontsize = 20)
+#     plt.ylabel('frequency', fontsize=20)
+#     plt.xticks(fontsize= 10)
+#     plt.legend(title = "Number of trajects")
     
-    fig.suptitle(f"Frequency Histogram of K generated by Random Algorithm \n (n= {tot_obs})", fontsize=25, y = 0.93)
-    fig.savefig(f"plots/steekproef_pro_trajects")
+#     fig.suptitle(f"Frequency Histogram of K generated by Random Algorithm \n (n= {tot_obs})", fontsize=25, y = 0.93)
+#     fig.savefig(f"plots/steekproef_pro_trajects")
