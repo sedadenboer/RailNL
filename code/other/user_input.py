@@ -28,8 +28,13 @@ def algo():
     # ask user about algorithm
     algorithm = input("Select algorithm: random (return r), greedy (return g) or hillclimber (return hc): ")
     if algorithm.upper() != "R" and algorithm.upper() != "RANDOM" and \
+<<<<<<< HEAD
         algorithm.upper() != "G" and algorithm.upper() != "GREEDY" and \
         algorithm.upper() != "HC" and algorithm.upper() != "HILLCLIMBER":
+=======
+        algorithm.upper() != "g" and algorithm.upper() != "GREEDY" and \
+            algorithm.upper() != "HC" and algorithm.upper() != "HILLCLIMBER":
+>>>>>>> 4b6d9b7e7747c1e8714d6e26aab64dd288743563
         sys.exit("Not a valid input")
     
     # ask user to apply heuristic yes or no
