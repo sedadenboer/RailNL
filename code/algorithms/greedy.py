@@ -11,7 +11,7 @@ class Greedy:
         - lowest duration
         - unused connection get priority over used connection
     """
-    def __init__(self, graph, prefer_unused_connection, save_output, runtime):
+    def __init__(self, graph, prefer_unused_connection, save_output, runtime = None):
         self.graph = copy.deepcopy(graph)
         self.prefer_unused_connection = prefer_unused_connection
         self.runtime = runtime 
@@ -29,7 +29,7 @@ class Greedy:
         # create dictionary of all durations
         duration_dict = dict()
         for connection in options:
-            duration_dict[connection] = int(connection.duration)
+            duration_dict[connection] = int(float(connection.duration))
         
         # select option with minimum duration
         optimal_connection = min(duration_dict, key=duration_dict.get)
