@@ -1,118 +1,167 @@
+# user_input.py
+#
+# Minor programmeren
+# Bèta-Programma
+#
+# Contains all user input command lines for running the algorithms.
+
 import sys
 import glob
 import os
 
+MAX_TRAJECTORIES_NSH = 7
+MAX_TRAJECTORIES_NL = 20
+MAX_DURATION_NSH = 120
+MAX_DURATION_NL = 180
+
+
 def region():
     """
-    ask user about region for which Lijnvoering should be constructed
+    Ask user about region for which lines should be constructed.
     """
+
+    # ask user for region
     region = input("Select region: North- & South-Holland (return NSH) or The Netherlands (return NL): ")
+
+    # check and handle user input, assign assignment constraints
     if region.upper() == "NSH":
-        map_name = 'Holland'
-        max_trajects = 7
-        max_duration = 120
+        map_name = "Holland"
+        max_trajectories = MAX_TRAJECTORIES_NSH
+        max_duration = MAX_DURATION_NSH
     elif region.upper() == "NL":
-        map_name = 'Nationaal'
-        max_trajects = 20
-        max_duration = 180
-    else: 
+        map_name = "Nationaal"
+        max_trajectories = MAX_TRAJECTORIES_NL
+        max_duration = MAX_DURATION_NL
+    else:
         sys.exit("Not a valid input")
-    
-    return map_name, max_trajects, max_duration
+
+    return map_name, max_trajectories, max_duration
+
 
 def algo():
     """
-    ask based on which algorithm with which features he/she would like to implement
+    Ask based on which algorithm what features should be implemented.
     """
 
     # ask user about algorithm
     algorithm = input("Select algorithm: random (return r), greedy (return g) or hillclimber (return hc): ")
+
+    # check for Random, Greedy or Hillclimber
     if algorithm.upper() != "R" and algorithm.upper() != "RANDOM" and \
-        algorithm.upper() != "G" and algorithm.upper() != "GREEDY" and \
-        algorithm.upper() != "HC" and algorithm.upper() != "HILLCLIMBER":
+            algorithm.upper() != "G" and algorithm.upper() != "GREEDY" and \
+            algorithm.upper() != "HC" and algorithm.upper() != "HILLCLIMBER":
         sys.exit("Not a valid input")
-    
-    # ask user to apply heuristic yes or no
+
+    # ask user about prioritizing unused connections (while creating trajectories)
     prefer_unused_connection = input("Would you like to give unused connections priority? yes (return y) no return (n): ")
+
+    # handle unused connections input
     if prefer_unused_connection.upper() == 'Y' or prefer_unused_connection.upper() == 'YES':
         prefer_unused_connection = True
-    elif prefer_unused_connection.upper() == 'N' or prefer_unused_connection.upper() == 'NO': 
+    elif prefer_unused_connection.upper() == 'N' or prefer_unused_connection.upper() == 'NO':
         prefer_unused_connection = False
     else:
         sys.exit("Not a valid input")
-    
-    # Ask user to save output 
+
+    # ask if user wants to save and overwrite output
     save_output = input("Would you like to save the output and overwrite previously saved output? yes (return y) no return (n): ")
+
     if save_output.upper() == 'Y' or save_output.upper() == 'YES':
         save_output = True
-    elif save_output.upper() == 'N' or save_output.upper() == 'NO': 
+    elif save_output.upper() == 'N' or save_output.upper() == 'NO':
         save_output = False
     else:
         sys.exit("Not a valid input")
-    
+
     return algorithm, prefer_unused_connection, save_output
+
 
 def random():
     """
-    ask additional questions for random algorithm
+    Ask additional questions for random algorithm.
     """
 
+    # initialize runtime
     runtime = '0'
-    question = input("Select goal: 1 solution with all connection (return 1) or optimal solution (return 2): ")
+
+    # ask if user wants 1 solution including connections or optimal solution
+    question = input("Select goal: 1 solution with all connections (return 1) or optimal solution (return 2): ")
+
+    # handle invalid input
     if question != '1' and question != '2':
         sys.exit("Not a valid input")
-    
+
+    # ask for runtime if optimal solution is chosen
     if question == '2':
         runtime = input("Type runtime in seconds: ")
-    
+
     return question, runtime
+
 
 def greedy():
     """
-    ask additional question for greedy algorithm
+    Ask additional question for greedy algorithm.
     """
 
     runtime = input("Type runtime in seconds: ")
 
     return runtime
 
+
 def hillclimber():
     """
-    ask additional question for hillclimber algorithm
+    Ask additional question for hillclimber algorithm.
     """
 
-    iterations = input("type number of iterations: ")
-
+    # ask number of iterations and start state algorithm
+    iterations = input("Type number of iterations: ")
     alg_choice = input("Select algorithm for initial solution: random (return r) or greedy (return g): ").upper()
+
+    # handle invalid input
     if alg_choice != "R" and alg_choice != "G":
         sys.exit("Not a valid input")
-    
+
+    # ask how to remove trajectory (lowest K or random)
     remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
+
+    # handle invalid input
     if remove_traject.upper() != "K" and remove_traject.upper() != "R":
         sys.exit("Not a valid input")
-    
+
     lin_or_exp = None
+
+    # ask if user wants to apply simulated annealing
     sim_anneal = input("Would you like to apply simulated annealing? yes (return y) or no (return n): ")
+
+    # if chosen for simulated annealing, ask for linear or exponential variant
     if sim_anneal.upper() == "Y" or sim_anneal.upper() == "YES":
         lin_or_exp = input("Would you like to apply linear (return l) or exponential (return e) formula?: ")
+    # handle invalid input
     elif sim_anneal.upper() != "N" and sim_anneal.upper() != "NO":
         sys.exit("Not a valid input")
-    
-    restart = input("Would you like to restart if state has not changed after x iterations? yes (return number of iterations) or no (return n): ")
+
+    # ask for restart
+    restart = input(
+        "Would you like to restart if state has not changed after x iterations? yes (return number of iterations) or no (return n): ")
+
+    # handle restart input
     if restart.upper() == "N" or restart.upper() == "NO":
         restart = False
     else:
         restart = int(restart)
 
     return iterations, alg_choice, remove_traject, sim_anneal, lin_or_exp, restart
-    
-def visualise_existing():
 
+
+def visualise_existing():
+    """
+    Ask additional questions for visualising existing distributions.
+    """
+    # ask user which visualization to plot
     goal = input("Would you like to visualize distributions (return d), K over iterations (return i) or both (return b)?: ")
+
+    # handle invalid input
     if goal.upper() != "D" and goal.upper() != "I" and goal.upper() != "B":
         sys.exit("Not a valid input")
-    
-    return goal
-    
 
-       
+    return goal
