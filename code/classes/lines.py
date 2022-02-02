@@ -6,11 +6,8 @@
 # - Contains lines class to represent a line solution.
 # - Methods and attributes: trajectories
 
-import collections
-
-
 class Lines():
-    
+
     def __init__(self):
         self.trajectories = []
 
@@ -20,7 +17,7 @@ class Lines():
         """
 
         self.trajectories = self.trajectories + [trajectory]
-    
+
     def __eq__(self, other):
         """
         Checks equiality of two line solutions.
@@ -34,4 +31,3 @@ class Lines():
             return True
         else:
             return False
-       

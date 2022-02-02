@@ -23,12 +23,12 @@ def main():
 
     # option 1: create new lines
     if goal == '1':
-        # ------------------------------ Ask user for region and create graph + start visualisation ---------------------------------
+        # --------------------------- Ask user for region and create graph + start visualisation ------------------------------
         map_name, max_trajects, max_duration = user_input.region()
         railway_map = graph.Graph(map_name, max_trajects, max_duration)
         vis.visualise_start(railway_map, map_name)
 
-        # ------------------------------------ Ask user which algorithm and what features ------------------------------------------
+        # --------------------------------- Ask user which algorithm and what features ---------------------------------------
         algorithm, prefer_unused_connection, save_output = user_input.algo()
 
         # --------------------------------------- Implement algorithm ----------------------------------------

@@ -13,7 +13,7 @@ class Trajectory:
         self.stations = stations
         self.duration = duration
         self.connections = connections
-    
+
     def update_trajectory(self, new_station, extra_time, connection, max_duration):
         """
         Add connection to trajectory if possible within time constraint.
@@ -27,7 +27,7 @@ class Trajectory:
             return True
         else:
             return False
-    
+
     def __eq__(self, other):
         """
         Checks if two trajectories are equal.
