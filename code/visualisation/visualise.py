@@ -340,9 +340,10 @@ def retrieve_name(file):
 
     if 'prefer_unused' in file:
         name += ' / prefer unused'
-    
+
     return name
-            
+
+
 def visualise_opt_K_all_algorithms(compare_opt_K):
     """
     Visualize how the optimal K compares for all algorithms after a number of iterations.
@@ -363,7 +364,7 @@ def visualise_opt_K_all_algorithms(compare_opt_K):
     all_names = []
     for file in compare_opt_K:
         # retrieve name from file_name
-        retrieve_name(file)
+        name = retrieve_name(file)
         all_names.append(name)
 
         # add values
@@ -411,7 +412,7 @@ def visualise_K_distribution_comparison(compare_all_K):
     all_values = []
     for file in compare_all_K:
         # retrieve name from file_name
-        retrieve_name(file)
+        name = retrieve_name(file)
         all_names.append(name)
 
         with open('data/' + file, 'r') as read_obj:
