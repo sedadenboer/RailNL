@@ -30,6 +30,8 @@ n!/(r!(n-r)!)
 
 Here n is the number of unique trajectories shorter than 120 minutes and r is the max. number of trajectories. In the North- and South-Holland case r = 7 and n = 10835519. The entire state space is thus equal to 10835519 * 10835518 * 10835517 * 10835516 * 10835515 * 10835514 * 10835513 = 10^10^8.16.
 
+For The Netherlands, r = 20 and n is such a large number that it was difficult to calculate this within a realistic timeframe.
+
 ### Algorithms
 #### Constraints
 To narrow down the problem and make the solution more realistic to real-life line management, there have been added a few general constraints:
