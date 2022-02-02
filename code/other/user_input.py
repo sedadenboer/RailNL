@@ -3,7 +3,11 @@
 # Minor programmeren
 # Bèta-Programma
 #
-# Contains all user input command lines for running the algorithms.
+# Contains all user input command lines for running and adjusting the algorithms:
+#   - region
+#   - algorithm choice
+#   - Random / Greedy / Hillclimber (Simulated Annealing)
+#   - visualization choices
 
 import sys
 import glob

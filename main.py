@@ -4,7 +4,7 @@
 # Bèta-Programma
 #
 # - Let's you create a RailNL line solution through the command-line.
-# - All files in /code are required for main.py to work.
+# - All files in /code are required for this file to work.
 
 import sys
 
