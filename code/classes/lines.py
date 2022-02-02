@@ -4,7 +4,7 @@
 # Bèta-Programma
 #
 # - Contains lines class to represent a line solution.
-# - Methods and attributes: trajectories
+# - Methods and attributes: trajectories.
 
 class Lines():
 
@@ -20,7 +20,7 @@ class Lines():
 
     def __eq__(self, other):
         """
-        Checks equiality of two line solutions.
+        Checks equality of two line solutions.
         """
 
         # two line solutions are equal if they contain the same trajectories, order does not matter
