@@ -311,6 +311,38 @@ def visualise_opt_K_improvement(all_opt_K, algorithm_name, extension):
     fig.savefig(file)
 
 
+def retrieve_name(file):
+    """
+    Retrieves algorithm name and chosen options from filename.
+    """
+
+    name = ''
+
+    if 'Random' in file:
+        name = 'Random'
+    elif 'Greedy' in file:
+        name = 'Greedy'
+    elif 'Hillclimber' in file:
+        name = 'Hillclimber'
+
+        if 'remove_K' in file:
+            name += ' / remove K'
+        else:
+            name += ' / remove random'
+        if 'random_start' in file:
+            name += ' / random start'
+        else:
+            name += ' / greedy start'
+        if 'sim_anneal' in file:
+            name += ' / sim anneal'
+        if 'restart' in file:
+            name += ' / restart'
+
+    if 'prefer_unused' in file:
+        name += ' / prefer unused'
+    
+    return name
+            
 def visualise_opt_K_all_algorithms(compare_opt_K):
     """
     Visualize how the optimal K compares for all algorithms after a number of iterations.
@@ -330,29 +362,8 @@ def visualise_opt_K_all_algorithms(compare_opt_K):
     all_values = []
     all_names = []
     for file in compare_opt_K:
-
         # retrieve name from file_name
-        if 'Random' in file:
-            name = 'Random'
-        elif 'Greedy' in file:
-            name = 'Greedy'
-        elif 'Hillclimber' in file:
-            name = 'Hillclimber'
-            if 'remove_K' in file:
-                name += ' / remove K'
-            else:
-                name += ' / remove random'
-            if 'random_start' in file:
-                name += ' / random start'
-            else:
-                name += ' / greedy start'
-            if 'sim_anneal' in file:
-                name += ' / sim anneal'
-            if 'restart' in file:
-                name += ' / restart'
-        if 'prefer_unused' in file:
-            name += ' / prefer unused'
-
+        retrieve_name(file)
         all_names.append(name)
 
         # add values
@@ -399,33 +410,11 @@ def visualise_K_distribution_comparison(compare_all_K):
     all_names = []
     all_values = []
     for file in compare_all_K:
-
         # retrieve name from file_name
-        if 'Random' in file:
-            name = 'Random'
-        elif 'Greedy' in file:
-            name = 'Greedy'
-        elif 'Hillclimber' in file:
-            name = 'Hillclimber'
-            if 'remove_K' in file:
-                name += ' / remove K'
-            else:
-                name += ' / remove random'
-            if 'random_start' in file:
-                name += ' / random start'
-            else:
-                name += ' / greedy start'
-            if 'sim_anneal' in file:
-                name += ' / sim anneal'
-            if 'restart' in file:
-                name += ' / restart'
-        if 'prefer_unused' in file:
-            name += ' / prefer unused'
-
+        retrieve_name(file)
         all_names.append(name)
 
         with open('data/' + file, 'r') as read_obj:
-
             # csv => list => histogram
             all_K = list(reader(read_obj))[0]
             all_K = [float(item) for item in all_K]
