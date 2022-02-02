@@ -59,7 +59,7 @@ def first_connection(chosen_connection, station_obj=None):
     Find connection variables based on chosen connection.
     """
 
-    if station_obj != None:
+    if station_obj is not None:
         station1 = station_obj.name
         station2 = list(station_obj.connections.values())[0]
         duration = chosen_connection.duration
@@ -111,7 +111,7 @@ def new_trajectory(graph, start_stations, algorithm, prefer_unused_connection):
     if len(graph.lines.trajectories) < len(start_stations):
         station_obj = start_stations[len(graph.lines.trajectories)]
         chosen_connection = list(station_obj.connections.keys())[0]
-        chosen_connection = graph.available_connections[int(chosen_connection.id)-1]
+        chosen_connection = graph.available_connections[int(chosen_connection.id) - 1]
         [station1, station2, duration] = first_connection(chosen_connection, station_obj)
     # else, randomly select start station ..
     else:
@@ -162,7 +162,7 @@ def new_trajectory(graph, start_stations, algorithm, prefer_unused_connection):
                     chosen_connection, duration, new_station = new_connection(algorithm, options, cur_station)
 
             # add valid connection to trajectory if within time constraint
-            if new_trajectory.update_trajectory(new_station, int(float(duration)), chosen_connection, graph.max_duration) == True:
+            if new_trajectory.update_trajectory(new_station, int(float(duration)), chosen_connection, graph.max_duration):
                 cur_station = graph.stations[new_station]
                 graph.add_connection(chosen_connection)
             # if impossible to add connection within time constraint, end Trajectory
