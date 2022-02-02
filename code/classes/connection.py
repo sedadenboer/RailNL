@@ -7,7 +7,7 @@
 # - Methods and attributes: id, stations, duration
 
 class Connection():
-    
+
     def __init__(self, id, station1, station2, duration):
         """
         Represents a connection in a line solution.

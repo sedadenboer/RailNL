@@ -5,13 +5,11 @@
 #
 # - Contains graph class to represent a line solution graph.
 # - Loads all stations and connections and their properties.
-# - Methods and attributes: stations (+ properties), connections (+ properties), 
-#   calculation of K
+# - Methods and attributes: stations (+ properties), connections (+ properties), calculation of K
 
 import csv
 from .station import Station
 from .connection import Connection
-from .trajectory import Trajectory
 from .lines import Lines
 
 
@@ -33,7 +31,7 @@ class Graph():
         # save result
         self.lines = Lines()
         self.K = 0
-    
+
     def load_stations(self, source_map):
         """
         Load all the stations into the graph.
@@ -100,7 +98,7 @@ class Graph():
         [station1, station2] = connection.stations
         self.visited_stations.add(station1)
         self.visited_stations.add(station2)
-    
+
     def lines_quality(self, used_connections, all_connections, lines):
         """
         Calculate the quality of the lines.
