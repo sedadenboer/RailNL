@@ -8,7 +8,6 @@
 # - Creates a graph with an optimal line solution.
 # - Results (plots) can be saved optionally.
 
-from code.classes.trajectory import Trajectory
 from code.algorithms import helpers as help
 from code.algorithms.greedy import Greedy
 from decimal import Decimal
@@ -94,9 +93,9 @@ class Hillclimber:
         graph.update_variables()
 
         # update quality-goalfunction of Lines
-        graph.lines_quality(graph.used_connections, \
-                                        graph.available_connections, \
-                                        graph.lines.trajectories)
+        graph.lines_quality(graph.used_connections,
+                            graph.available_connections,
+                            graph.lines.trajectories)
 
         return graph
 
@@ -122,9 +121,9 @@ class Hillclimber:
         graph.update_variables()
 
         # update quality-goalfunction of Lines
-        graph.lines_quality(graph.used_connections, \
-                                        graph.available_connections, \
-                                        graph.lines.trajectoryories)
+        graph.lines_quality(graph.used_connections,
+                            graph.available_connections,
+                            graph.lines.trajectoryories)
 
         return graph
 
@@ -136,7 +135,6 @@ class Hillclimber:
         # create new solutions till valid one is found
         valid_solution = False
         while valid_solution == False: 
-
             # find stations with one connection
             start_stations = help.begin_stations(graph)
 
@@ -151,9 +149,9 @@ class Hillclimber:
                 graph.update_variables()
         
         # add quality-goalfunction to Lines
-        graph.lines_quality(graph.used_connections, \
-                                        graph.available_connections, \
-                                        graph.lines.trajectories)
+        graph.lines_quality(graph.used_connections,
+                            graph.available_connections,
+                            graph.lines.trajectories)
         
         return graph
 
@@ -248,7 +246,7 @@ class Hillclimber:
                 print(f"solutions: {n_sols}")
             
             # at restart, save current state and generate new start state
-            if self.restart != False and n_repeat > self.restart:
+            if self.restart and n_repeat > self.restart:
                 all_restart_K[current_state.K] = current_state
                 if self.alg_choice.upper() == "R" or self.alg_choice.upper() == "RANDOM":
                     current_state = self.random_start_state()
@@ -257,7 +255,7 @@ class Hillclimber:
                 n_repeat = 0
 
         # if restart applied, save graph with highest K
-        if self.restart != False:
+        if self.restart:
             max_key = max(all_restart_K, key=int)
             self.graph = all_restart_K[max_key]
 
@@ -269,10 +267,10 @@ class Hillclimber:
         self.all_opt_K = all_opt_K
 
         # print time
-        print(f"\n time passed: {time.time() - start}")
+        print(f"\ntime passed: {time.time() - start}")
 
         # save results
-        if self.save_output == True:
+        if self.save_output:
 
             # file name
             extension = ''
@@ -288,7 +286,7 @@ class Hillclimber:
                 extension += '_remove_random'
             if self.sim_anneal:
                 extension += '_sim_anneal'
-            if self.restart != False:
+            if self.restart:
                 extension += '_restart'
             
             # write result out to csv
