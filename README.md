@@ -49,19 +49,45 @@ This algorithm is build the same as Randomise, with the exception that it always
 #### Hill Climber
 Hill Climber starts with a valid start state, which is a line management solution from either Randomise or Greedy with user specified iterations. The algorithm then tries to find a more optimal K value by removing a trajectory and replacing it with a new one, again with a user specified number of iterations. There is an option to randomly remove a trajectory or remove the trajectory with the lowest partial K. To calculate the latter, `T` is initialized as 1
 
-#### Simulated Annealing
+#### Hill Climber + Simulated Annealing
 Simulated Annealing is an extension of the Hill Climber algorithm. With every new state it calculates an acceptance probability with the help of a so called 'temperature' (`T`)  formula which can be determined linearly (`T = N / 2 - 0.5 * i`) or exponentially (`T = N / 2 * 0.995 * i`) whereby `N` indicates the total number of iterations and `i` the current iteration. Consequently, states with lower K scores can also be accepted, most likely during the beginning of the iteration cyclus. This way, you can get out of a local optimum the Hill Climber algorithm might have gotten into.
 
-#### Restart
+#### Hill Climber + Restart
 A restart is an extension to the Hill Climber algorithm which helps to avoid spending time trying to get out of a impossible-to-improve state. The restart occurs after an indicated number of iterations in which the state of the Hill Climber has not changed. At that point in the iteration cyclus, a new start state is generated from where the Hill Climber algorithm is applied. The final values of all restart-cycles are stored in an archive, such that overall optimum state can be determined afterwards.
 
 ## Structure of the repository
-* The program can be run with main.py and in output.csv the results are shown.
-* code filemap: files for the classes, algorithms, calculation of the state space and the visualisation can be found.
-* data filemap: csv files containing connection and station data for North- and South-Holland and The Netherlands 
-* docs filemap: contains images of railway maps and schematic overviews of the datastructure as well as the experiment tree
-* plots: analysing images of the distribution of K and improvement of K over the number of iterations.
-* results: line management solution maps of all algorithms, including the output in csv files.
+
+The program can be run with main.py. It creates an initial graph based on the csv files containing connection and station data for North- and South-Holland and The Netherlands which are stored in the data folder. The code filemap contains the code for the algorithms, the classes, the visulaisations and other functionalities as the input questions. The docs filemap contains images of railway maps and schematic overviews of the datastructure as well as the experiment tree The plots filemap contians analysing images of the distribution of K and improvement of K over the number of iterations. The results filemap contains line management solution maps of all algorithms, including the output in csv files.
+
+.
+├── code    
+│     ├── algorithms
+│     ├── classes
+│     ├── visualisation
+│     └── other
+├── data  
+│     ├── Holland
+│     └── Nationaal
+├── docs                    
+├── plots 
+├── results
+│     ├── Random
+│     │    ├── One_Solution
+│     │    │    ├── Holland
+│     │    │    └── Nationaal
+│     │    └── Optimal_Solution
+│     │         ├── Holland
+│     │         └── Nationaal
+│     ├── Greedy
+│     │    ├── Holland
+│     │    └── Nationaal
+│     └── Hillclimber
+│          ├── Holland
+│          └── Nationaal
+├── .gitignore
+├── main.py
+├── README.md
+└── requirements.txt
 
 ## Getting started
 ### Prerequisits
