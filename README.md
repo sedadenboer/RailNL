@@ -6,7 +6,7 @@ The organization of a trainnetwork is a very complex problem and can be solved w
 
 The former can be done with the help of the following equation:
 
-`K = p * 1000 = (T * 100 + Min)`
+`K = p * 1000 - (T * 100 + Min)`
 
 `K` = quality of the line solution
 

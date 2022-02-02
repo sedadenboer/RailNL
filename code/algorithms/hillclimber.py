@@ -1,10 +1,19 @@
-from code.classes.traject import Traject
+# hillclimber.py
+#
+# Minor Programmeren
+# Bèta-Programma
+#
+# - Hillclimber class which creates hillclimber algorithm line solution.
+# - Also has the option to add Simulated Annealing.
+# - Creates a graph with an optimal line solution.
+# - Results (plots) can be saved optionally.
+
+from code.classes.trajectory import Trajectory
 from code.algorithms import helpers as help
 from code.algorithms.greedy import Greedy
 from decimal import Decimal
 from code.algorithms.randomise import Random
 from code.visualisation import visualise as vis
-
 import random
 import copy
 import sys
@@ -13,19 +22,22 @@ import time
 
 class Hillclimber:
     """
-    Hillclimber class that aims to optimize K by small mutations 
+    Hillclimber class that aims to optimize K by small mutations.
     """
 
-    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_traject, iterations, sim_anneal, lin_or_exp, restart):
+    def __init__(self, graph, prefer_unused_connection, save_output, alg_choice, remove_trajectory, iterations, sim_anneal, lin_or_exp, restart):
+
         self.graph = copy.deepcopy(graph)
         self.prefer_unused_connection = prefer_unused_connection
-        self.remove_traject = remove_traject
+        self.remove_trajectory = remove_trajectory
         self.save_output = save_output
         self.iterations = iterations
         self.alg_choice = alg_choice
         self.restart = restart
         self.all_K = []
         self.all_opt_K = dict()
+
+        # check for simulated annealing
         if sim_anneal.upper() == "Y" or sim_anneal.upper() == "YES":
             self.sim_anneal = True
             self.formula = lin_or_exp
@@ -36,6 +48,7 @@ class Hillclimber:
         """
         Generates random start solution for hillclimber by random algorithm.
         """
+
         random_alg = Random(self.graph, self.prefer_unused_connection, False, 1)
         random_alg.run_opt_sol()
 
@@ -47,6 +60,7 @@ class Hillclimber:
         """
         Generates greedy start solution for hillclimber by greedy algorithm.
         """
+
         greedy_alg = Greedy(self.graph, self.prefer_unused_connection, False, 1)
         greedy_alg.run()
 
@@ -54,68 +68,69 @@ class Hillclimber:
         
         return new_graph
 
-    def partial_K(self, traject):
+    def partial_K(self, trajectory):
         """
         Calculate the quality of the Traject, set T = 1
         """
+
         # fraction of ridden connections
-        p = len(traject.connections) / len(self.graph.available_connections)
+        p = len(trajectory.connections) / len(self.graph.available_connections)
 
         # calculate K
-        K = p * 10000 - traject.duration
+        K = p * 10000 - trajectory.duration
 
         return K
 
-    def remove_traject_random(self, graph):
+    def remove_trajectory_random(self, graph):
         """
-        Remove random traject from Lijnvoering
+        Remove random trajectory from Lines
         """
         
-        # randomly chose traject to remove from Lijnvoering
-        traject_to_remove = random.choice(graph.lijnvoering.trajecten)
+        # randomly chose trajectory to remove from Lines
+        trajectory_to_remove = random.choice(graph.lines.trajectories)
 
-        # remove traject and update variables
-        graph.lijnvoering.trajecten.remove(traject_to_remove)
+        # remove trajectory and update variables
+        graph.lines.trajectories.remove(trajectory_to_remove)
         graph.update_variables()
 
-        # update quality-goalfunction of Lijnvoering
-        graph.lijnvoering_kwaliteit(graph.used_connections, \
+        # update quality-goalfunction of Lines
+        graph.lines_quality(graph.used_connections, \
                                         graph.available_connections, \
-                                        graph.lijnvoering.trajecten)
+                                        graph.lines.trajectories)
 
         return graph
 
-    def remove_traject_lowest_K(self, graph):
+    def remove_trajectory_lowest_K(self, graph):
         """
-        Remove traject with lowest K from Lijnvoering
+        Remove trajectory with lowest K from Lines
         """
         
-        # start with first traject as worse traject
-        bad_traject = graph.lijnvoering.trajecten[0]
-        lowest_K = self.partial_K(bad_traject)
+        # start with first trajectory as worse trajectory
+        bad_trajectory = graph.lines.trajectories[0]
+        lowest_K = self.partial_K(bad_trajectory)
 
-        # find traject with lowest K
-        for traject in graph.lijnvoering.trajecten:
+        # find trajectory with lowest K
+        for trajectory in graph.lines.trajectories:
 
-            # replace badest traject if partial_K lower 
-            if self.partial_K(traject) < lowest_K:
-                lowest_K = self.partial_K(traject)
-                bad_traject = traject
+            # replace badest trajectory if partial_K lower 
+            if self.partial_K(trajectory) < lowest_K:
+                lowest_K = self.partial_K(trajectory)
+                bad_trajectory = trajectory
         
-        # remove traject from lijnvoering
-        graph.lijnvoering.trajecten.remove(bad_traject)
+        # remove trajectory from lines
+        graph.lines.trajectories.remove(bad_trajectory)
         graph.update_variables()
 
-        # update quality-goalfunction of Lijnvoering
-        graph.lijnvoering_kwaliteit(graph.used_connections, \
+        # update quality-goalfunction of Lines
+        graph.lines_quality(graph.used_connections, \
                                         graph.available_connections, \
-                                        graph.lijnvoering.trajecten)
+                                        graph.lines.trajectoryories)
 
         return graph
 
-    def add_new_traject(self, graph):
+    def add_new_trajectory(self, graph):
         """
-        Add new traject to Lijnvoering till solution is valid
+        Add new trajectory to Lines till solution is valid
         """
 
         # create new solutions till valid one is found
@@ -125,26 +140,31 @@ class Hillclimber:
             # find stations with one connection
             start_stations = help.begin_stations(graph)
 
-            # add new traject to Lijnvoering
-            help.new_traject(graph, start_stations, random.choice, self.prefer_unused_connection)
+            # add new trajectory to Lines
+            help.new_trajectory(graph, start_stations, random.choice, self.prefer_unused_connection)
 
-            # check whether valid Lijnvoering, if not remove newly added Traject
+            # check whether valid Lines, if not remove newly added Traject
             if help.visited_all_stations(graph) or self.sim_anneal:
                 valid_solution = True
             else:
-                graph.lijnvoering.trajecten.pop()
+                graph.lines.trajectories.pop()
                 graph.update_variables()
         
-        # add quality-goalfunction to Lijnvoering
-        graph.lijnvoering_kwaliteit(graph.used_connections, \
+        # add quality-goalfunction to Lines
+        graph.lines_quality(graph.used_connections, \
                                         graph.available_connections, \
-                                        graph.lijnvoering.trajecten)
+                                        graph.lines.trajectories)
         
         return graph
 
     def simulated_annealing(self, i, new_graph, old_graph):
-        
-        # Set temperature by chosen formula
+        """
+        Applies simulated annealing to hillclimber algorithm.
+        Does this by looking at the acceptation probability, and 
+        calculates this with the help of a linear or exponetial function.
+        """
+
+        # set temperature by chosen formula
         if self.formula.upper() == "L":
             temperature = self.iterations / 2 - 0.5 * i
         elif self.formula.upper() == "E":
@@ -152,12 +172,14 @@ class Hillclimber:
         else: 
             sys.exit("Algorithm not (yet) implemented")
 
-        # Determine if new solution needs to be accepted
+        # calculate acceptation probability
         if float(temperature) > 0.0001:
             acceptation_probability = Decimal(2 ** (Decimal(new_graph.K - old_graph.K) / Decimal(temperature)))
         else: 
             acceptation_probability = 0
         random_probability = random.random()
+
+        # determine if new solution needs to be accepted
         if acceptation_probability > random_probability:
             return new_graph
         else:
@@ -166,13 +188,14 @@ class Hillclimber:
     def run(self):
         """
         Algorithm that implements the hillclimber algorithm:
-        - It start with a valid Lijnvoering generated by the random or greedy algorithm
-        - It removes a Traject from this Lijnvoering
-        - It creates a new valid Trajects and adds this to the Lijnvoering
-        - If K_new_Lijnvoering > K_old_Lijnvoering, the new Lijnvoering is kept
+        - It start with a valid Lines generated by the random or greedy algorithm
+        - It removes a Traject from this Lines
+        - It creates a new valid Trajectories and adds this to the Lines
+        - If K_new_Lijnvoering > K_old_Lijnvoering, the new Lines is kept
         - This algorithm is repeated a particular number of times 
         """
-        print('\nloading hillclimber constructed lijnvoering...\n')
+
+        print('\nloading hillclimber constructed lines...\n')
 
         # store variables
         all_K = []
@@ -198,14 +221,14 @@ class Hillclimber:
             # copy current state
             new_graph = copy.deepcopy(current_state)
 
-            # remove traject from Lijnvoering
-            if self.remove_traject.upper() == "K":
-                new_graph = self.remove_traject_lowest_K(new_graph)
-            elif self.remove_traject.upper() == "R":
-                new_graph = self.remove_traject_random(new_graph)
+            # remove trajectory from Lines
+            if self.remove_trajectory.upper() == "K":
+                new_graph = self.remove_trajectory_lowest_K(new_graph)
+            elif self.remove_trajectory.upper() == "R":
+                new_graph = self.remove_trajectory_random(new_graph)
 
-            # add new traject till valid Lijnvoering is created
-            new_graph = self.add_new_traject(new_graph)
+            # add new trajectory till valid Lines is created
+            new_graph = self.add_new_trajectory(new_graph)
             
             # Update current state, optionally by simulated annealing
             if self.sim_anneal:
@@ -218,7 +241,7 @@ class Hillclimber:
             all_opt_K[n_runs] = current_state.K
             
             # check whether current state has changed
-            if current_state.lijnvoering != new_graph.lijnvoering:
+            if current_state.lines != new_graph.lines:
                 n_repeat += 1
             else:
                 n_sols += 1
@@ -259,7 +282,7 @@ class Hillclimber:
                 extension += '_random_start'
             else:
                 extension += '_greedy_start'
-            if self.remove_traject.upper() == "K":
+            if self.remove_trajectory.upper() == "K":
                 extension += '_remove_K'
             else:
                 extension += '_remove_random'
@@ -279,5 +302,3 @@ class Hillclimber:
 
             # write out to csv all K (for distribution) all opt K (for iterations)
             help.write_to_csv(self.graph, all_K, all_opt_K, 'Hillclimber', extension)
-
- 

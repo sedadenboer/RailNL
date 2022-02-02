@@ -126,7 +126,7 @@ def hillclimber():
         sys.exit("Not a valid input")
 
     # ask how to remove trajectory (lowest K or random)
-    remove_traject = input("Would you like to remove traject with lowest K (return k) or random traject (return r)?: ")
+    remove_traject = input("Would you like to remove trajectory with lowest K (return k) or random trajectory (return r)?: ")
 
     # handle invalid input
     if remove_traject.upper() != "K" and remove_traject.upper() != "R":

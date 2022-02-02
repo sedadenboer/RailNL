@@ -1,18 +1,34 @@
+# lines.py
+#
+# Minor Programmeren
+# Bèta-Programma
+#
+# - Contains lines class to represent a line solution.
+# - Methods and attributes: trajectories
+
 import collections
 
-class Lijnvoering():
+
+class Lines():
     
     def __init__(self):
-        self.trajecten = []
+        self.trajectories = []
 
-    def add_traject(self, traject):
-        self.trajecten = self.trajecten + [traject]
+    def add_trajectory(self, trajectory):
+        """
+        Adds trajectory to line solution.
+        """
+
+        self.trajectories = self.trajectories + [trajectory]
     
     def __eq__(self, other):
+        """
+        Checks equiality of two line solutions.
+        """
 
-        # two lijnvoeringen are equal if they contain the same trajecten, order does not matter
-        check_1 = all(item in self.trajecten for item in other.trajecten)
-        check_2 = all(item in other.trajecten for item in self.trajecten)
+        # two line solutions are equal if they contain the same trajectories, order does not matter
+        check_1 = all(item in self.trajectories for item in other.trajectories)
+        check_2 = all(item in other.trajectories for item in self.trajectories)
 
         if check_1 and check_2:
             return True

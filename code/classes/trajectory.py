@@ -1,6 +1,15 @@
+# trajectory.py
+#
+# Minor Programmeren
+# Bèta-Programma
+#
+# - Contains trajectory class to represent a trajectory.
+# - Methods and attributes: stations, duration, connections
+
 class Trajectory:
 
     def __init__(self, stations, duration, connections):
+
         self.stations = stations
         self.duration = duration
         self.connections = connections
@@ -10,6 +19,7 @@ class Trajectory:
         Add connection to trajectory if possible within time constraint.
         Return boolean to indicate whether succeeded or not.
         """
+
         if self.duration + extra_time < max_duration:
             self.stations = self.stations + [new_station]
             self.duration = self.duration + extra_time
@@ -19,6 +29,9 @@ class Trajectory:
             return False
     
     def __eq__(self, other):
+        """
+        Checks if two trajectories are equal.
+        """
 
         # two trajectories are equal if they contain connections in the same order
         if self.connections == other.connections:
