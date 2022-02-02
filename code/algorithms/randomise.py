@@ -72,7 +72,7 @@ class Random:
         self.graph = new_graph
 
         # save output
-        if self.save_output == True:
+        if self.save_output:
             # write result out to csv
             help.write_output_to_csv(new_graph, 'Random/One_Solution')
 
@@ -137,7 +137,7 @@ class Random:
                 # add the current optimal K to a dictionary with the solution number as key
                 all_opt_K[n_sols] = opt_K
 
-         # add optimal graph and K to Random object
+        # add optimal graph and K to Random object
         self.graph = opt_map
         self.Nsols = n_sols
         self.all_K = all_K
@@ -145,7 +145,7 @@ class Random:
         self.all_opt_K = all_opt_K
 
         # save output
-        if self.save_output == True:
+        if self.save_output:
 
             # file name
             extension = ''
@@ -163,3 +163,4 @@ class Random:
 
             # write out to csv all K (for distribution) all opt K (for iterations)
             help.write_to_csv(self.graph, all_K, all_opt_K, 'Random', extension)
+            
