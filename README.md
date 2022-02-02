@@ -60,12 +60,12 @@ A restart is an extension to the Hill Climber algorithm which helps to avoid spe
 The program can be run with main.py. It creates an initial graph based on the csv files containing connection and station data for North- and South-Holland and The Netherlands which are stored in the data folder. The code filemap contains the code for the algorithms, the classes, the visulaisations and other functionalities as the input questions. The docs filemap contains images of railway maps and schematic overviews of the datastructure as well as the experiment tree The plots filemap contians analysing images of the distribution of K and improvement of K over the number of iterations. The results filemap contains line management solution maps of all algorithms, including the output in csv files.
 
 .
-├── code    
-│     ├── algorithms
-│     ├── classes
-│     ├── visualisation
-│     └── other
-├── data  
+├── code    \
+│     ├── algorithms\
+│     ├── classes\
+│     ├── visualisation\
+│     └── other\
+├── data  \
 │     ├── Holland
 │     └── Nationaal
 ├── docs                    
