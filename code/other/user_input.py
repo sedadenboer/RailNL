@@ -10,8 +10,6 @@
 #   - visualization choices
 
 import sys
-import glob
-import os
 
 MAX_TRAJECTORIES_NSH = 7
 MAX_TRAJECTORIES_NL = 20
@@ -68,7 +66,8 @@ def algo():
         sys.exit("Not a valid input")
 
     # ask if user wants to save and overwrite output
-    save_output = input("Would you like to save the output and overwrite previously saved output? yes (return y) no return (n): ")
+    save_output = input(
+        "Would you like to save the output and overwrite previously saved output? yes (return y) no return (n): ")
 
     if save_output.upper() == 'Y' or save_output.upper() == 'YES':
         save_output = True
