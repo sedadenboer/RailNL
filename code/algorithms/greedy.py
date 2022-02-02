@@ -20,7 +20,7 @@ class Greedy:
         - unused connection get priority over used connection
     """
     
-    def __init__(self, graph, prefer_unused_connection, save_output, runtime = None):
+    def __init__(self, graph, prefer_unused_connection, save_output, runtime=None):
 
         self.graph = copy.deepcopy(graph)
         self.prefer_unused_connection = prefer_unused_connection
@@ -50,7 +50,7 @@ class Greedy:
         """
         Algorithm that looks for combination of trajectories such that short-term optimum is reached
         """
-        
+
         print('\nloading greedy constructed lines...\n')
 
         # store variables
@@ -74,7 +74,7 @@ class Greedy:
             # for each try, create a new graph 
             new_graph = copy.deepcopy(self.graph)
             
-            # if not yet all stations and max. number of trajectories reached, add new trajectory to lines 
+            # while not yet all stations and max. number of trajectories reached, add new trajectory to lines 
             while help.reached_max_depth(new_graph) == False and help.visited_all_stations(new_graph) == False:
                 help.new_trajectory(new_graph, start_stations, self.greedy_choice, self.prefer_unused_connection)
 
@@ -84,9 +84,9 @@ class Greedy:
                 print(f"solutions: {n_sols}")
             
                 # add quality-goalfunction
-                new_graph.lines_quality(new_graph.used_connections, \
-                                                new_graph.available_connections, \
-                                                new_graph.lines.trajectories)
+                new_graph.lines_quality(new_graph.used_connections,
+                                        new_graph.available_connections,
+                                        new_graph.lines.trajectories)
 
                 # if quality higher then optimal, replace optimal results
                 if new_graph.K > opt_K:
@@ -124,3 +124,4 @@ class Greedy:
 
             # write out to csv all K (for distribution) all opt K (for iterations)
             help.write_to_csv(self.graph, all_K, all_opt_K, 'Greedy', extension)
+            

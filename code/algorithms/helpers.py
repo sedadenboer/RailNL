@@ -228,7 +228,8 @@ def print_statement_main(final_graph):
     Print statement when final lines solution is found.
     """
 
-    print("Found optimal K of:", final_graph.K)
+    print("\nFound optimal K of:", final_graph.K)
+    print("\n")
 
     for trajectory in final_graph.lines.trajectories:
         print("Trajectory", final_graph.lines.trajectories.index(trajectory), "\n", ", ".join(trajectory.stations))
