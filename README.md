@@ -57,15 +57,12 @@ Simulated Annealing is an extension of the Hill Climber algorithm. With every ne
 A restart is an extension to the Hill Climber algorithm which helps to avoid spending time trying to get out of a impossible-to-improve state. The restart occurs after an indicated number of iterations in which the state of the Hill Climber has not changed. At that point in the iteration cyclus, a new start state is generated from where the Hill Climber algorithm is applied. The final values of all restart-cycles are stored in an archive, such that overall optimum state can be determined afterwards.
 
 ## Structure of the repository
-<<<<<<< HEAD
 * The program can be run with main.py and in output.csv the results are shown.
 * code filemap: files for the classes, algorithms, calculation of the state space and the visualisation can be found.
 * data filemap: csv files containing connection and station data for North- and South-Holland and The Netherlands.
 * docs filemap: images of maps and visualisations of solutions.
 * plots: analysis of some algorithms.
 * results: line solution maps of all algorithms, including the output in csv files.
-=======
->>>>>>> 2a0393b9202f10cbbda4ccb18eeaf846a25d4a98
 
 The program can be run with main.py. It creates an initial graph based on the csv files containing connection and station data for North- and South-Holland and The Netherlands which are stored in the data folder. The code filemap contains the code for the algorithms, the classes, the visulaisations and other functionalities as the input questions. The docs filemap contains images of railway maps and schematic overviews of the datastructure as well as the experiment tree The plots filemap contians analysing images of the distribution of K and improvement of K over the number of iterations. The results filemap contains line management solution maps of all algorithms, including the output in csv files.
 ```
