@@ -144,8 +144,8 @@ def hillclimber():
         sys.exit("Not a valid input")
 
     # ask for restart
-    restart = input(
-        "Would you like to restart if state has not changed after x iterations? yes (return number of iterations) or no (return n): ")
+    restart = input("Would you like to restart if state has not changed after x iterations? \
+                    yes (return number of iterations) or no (return n): ")
 
     # handle restart input
     if restart.upper() == "N" or restart.upper() == "NO":

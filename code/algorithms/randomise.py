@@ -16,7 +16,7 @@ import time
 
 class Random:
     """
-    The Random class that choses a valid random new connection in each Trajectory
+    The Random class that chooses a valid random new connection in each Trajectory.
     """
 
     def __init__(self, graph, prefer_unused_connection, save_output, runtime=None):
@@ -32,7 +32,7 @@ class Random:
 
     def run_one_sol(self):
         """
-        Algorithm that looks for combination of trajectories such that all connections are used
+        Algorithm that looks for combination of trajectories such that all connections are used.
         """
 
         print('\nloading randomly constructed lines...\n')
@@ -81,7 +81,7 @@ class Random:
 
     def run_opt_sol(self):
         """
-        Algorithm that looks for combination of trajectories such that quality goal-fucntion is optimized
+        Algorithm that looks for combination of trajectories such that quality goal-fucntion is optimized.
         """
 
         print('\nloading randomly constructed lines...\n')
@@ -122,7 +122,7 @@ class Random:
                                         new_graph.available_connections,
                                         new_graph.lines.trajectories)
 
-                # if quality higher then optimal, replace optimal results
+                # if quality higher than optimal, replace optimal results
                 if new_graph.K > opt_K:
                     opt_K = new_graph.K
                     opt_map = new_graph
@@ -161,6 +161,5 @@ class Random:
             # create visualisation of optimal K improvement
             vis.visualise_opt_K_improvement(all_opt_K, 'Random', extension)
 
-            # write out to csv all K (for distribution) all opt K (for iterations)
+            # write all K (for distribution) and all opt K (for iterations) out to csv
             help.write_to_csv(self.graph, all_K, all_opt_K, 'Random', extension)
-            
