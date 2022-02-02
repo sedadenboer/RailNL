@@ -1,13 +1,13 @@
-class Traject:
+class Trajectory:
 
     def __init__(self, stations, duration, connections):
         self.stations = stations
         self.duration = duration
         self.connections = connections
     
-    def update_traject(self, new_station, extra_time, connection, max_duration):
+    def update_trajectory(self, new_station, extra_time, connection, max_duration):
         """
-        Add connection to traject if possible within time constraint.
+        Add connection to trajectory if possible within time constraint.
         Return boolean to indicate whether succeeded or not.
         """
         if self.duration + extra_time < max_duration:
@@ -20,10 +20,10 @@ class Traject:
     
     def __eq__(self, other):
 
-        # two trajects are equal if they contain connections in the same order
+        # two trajectories are equal if they contain connections in the same order
         if self.connections == other.connections:
             return True
-        # or if one traject is the reverse of the other traject
+        # or if one trajectory is the reverse of the other trajectory
         elif list(reversed(self.connections)) == other.connections:
             return True
         else:
