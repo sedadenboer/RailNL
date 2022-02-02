@@ -3,7 +3,7 @@
 # Minor programmeren
 # Bèta-Programma
 #
-# - Let's you create a RailNL line solution through the command-line.
+# - Lets you create a RailNL line solution through the command-line.
 # - All files in /code are required for this file to work.
 
 import sys
@@ -28,7 +28,7 @@ def main():
         railway_map = graph.Graph(map_name, max_trajects, max_duration)
         vis.visualise_start(railway_map, map_name)
 
-        # ------------------------------------ Ask user which algorithm with which featurs ------------------------------------------
+        # ------------------------------------ Ask user which algorithm and what features ------------------------------------------
         algorithm, prefer_unused_connection, save_output = user_input.algo()
 
         # --------------------------------------- Implement algorithm ----------------------------------------
