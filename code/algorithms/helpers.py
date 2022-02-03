@@ -3,7 +3,7 @@
 # Minor Programmeren
 # Bèta-Programma
 #
-# Contain functions that have to be used frequently.
+# Contains functions that have to be used frequently.
 
 import csv
 import random
@@ -14,7 +14,7 @@ MAX_TRAJECTORIES_NSH = 7
 
 def begin_stations(graph):
     """
-    Find Stations in railway network which have one connection.
+    Find stations in railway network which have one connection.
     """
 
     start_stations = []
@@ -28,7 +28,7 @@ def begin_stations(graph):
 
 def visited_all_stations(graph):
     """
-    Check whether all Stations in railway network are in lines.
+    Check whether all stations in railway network are in lines.
     """
 
     return len(graph.visited_stations) == len(graph.stations)
@@ -36,7 +36,7 @@ def visited_all_stations(graph):
 
 def reached_max_depth(graph):
     """
-    Check whether max. number of Trajectories are in Lines.
+    Check whether max. number of trajectories are in lines.
     """
 
     return len(graph.lines.trajectories) == graph.max_trajectories
@@ -44,7 +44,7 @@ def reached_max_depth(graph):
 
 def start_new_trajectory(graph, station1, station2, duration, chosen_connection):
     """
-    Create new Trajectory based on start connection.
+    Create new trajectory based on start connection.
     """
 
     new_trajectory = Trajectory([station1, station2], int(float(duration)), [chosen_connection])
@@ -84,7 +84,7 @@ def new_connection(algorithm, options, cur_station):
 
 def unused_connections(cur_station, graph):
     """
-    At junction, check whether if connection not yet in Lines is possible.
+    At junction, check if connection not yet in lines is possible.
     """
 
     unused_cur_station = set(cur_station.connections.keys()).intersection(graph.unused_connections)
@@ -94,7 +94,7 @@ def unused_connections(cur_station, graph):
 
 def unique_station_at_trajectory(cur_station, stations_at_trajectory):
     """
-    Check whether connection with Station not yet at Trajectory is possible.
+    Check whether connection with station not yet at trajectory is possible.
     """
 
     con_stations = list(cur_station.connections.values())
@@ -104,7 +104,7 @@ def unique_station_at_trajectory(cur_station, stations_at_trajectory):
 
 def new_trajectory(graph, start_stations, algorithm, prefer_unused_connection):
     """
-    Create new Trajectory and add to Lines.
+    Create new trajectory and add to lines.
     """
 
     # if possible, set single-connection station as start station
@@ -118,7 +118,7 @@ def new_trajectory(graph, start_stations, algorithm, prefer_unused_connection):
         # .. from unused connections @ lines
         if prefer_unused_connection and len(graph.unused_connections) != 0:
             chosen_connection = random.choice(list(graph.unused_connections))
-        # .. from all connections availble
+        # .. from all connections available
         else:
             chosen_connection = random.choice(list(graph.available_connections))
         [station1, station2, duration] = first_connection(chosen_connection)
@@ -130,16 +130,16 @@ def new_trajectory(graph, start_stations, algorithm, prefer_unused_connection):
     extend_trajectory = True
 
     while extend_trajectory:
-        # chose new connection from unused or all connections
+        # choose new connection from unused or all connections
         if prefer_unused_connection and unused_connections(cur_station, graph):
             options = unused_connections(cur_station, graph)
         else:
             options = list(cur_station.connections.keys())
 
-        # select next part of Trajectory by algorithm
+        # select next part of trajectory by algorithm
         chosen_connection, duration, new_station = new_connection(algorithm, options, cur_station)
 
-        # if selected station is already in Trajectory..
+        # if selected station is already in trajectory..
         if unique_station_at_trajectory(cur_station, new_trajectory.stations):
             # .. find new connection from all connections
             if not prefer_unused_connection:
@@ -165,15 +165,15 @@ def new_trajectory(graph, start_stations, algorithm, prefer_unused_connection):
             if new_trajectory.update_trajectory(new_station, int(float(duration)), chosen_connection, graph.max_duration):
                 cur_station = graph.stations[new_station]
                 graph.add_connection(chosen_connection)
-            # if impossible to add connection within time constraint, end Trajectory
+            # if impossible to add connection within time constraint, end trajectory
             else:
                 extend_trajectory = False
 
-        # if impossible to select station not yet in Trajectory, end Trajectory
+        # if impossible to select station not yet in trajectory, end trajectory
         else:
             extend_trajectory = False
 
-    # if Trajectory is finished, add Trajectory to Lines
+    # if trajectory is finished, add trajectory to lines
     graph.lines.add_trajectory(new_trajectory)
 
 
@@ -217,7 +217,7 @@ def write_to_csv(final_graph, all_K, all_opt_K, algorithm_name, extension):
         writer = csv.writer(f)
         writer.writerow(all_K)
 
-    # create csv file for opt_K (Dictionairy)
+    # create csv file for opt_K (Dictionary)
     with open(file_opt_K, 'w', encoding='UTF8') as f:
         for key in all_opt_K.keys():
             f.write("%s,%s\n" % (key, all_opt_K[key]))
