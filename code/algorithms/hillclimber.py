@@ -124,7 +124,7 @@ class Hillclimber:
         # update quality-goalfunction of lines
         graph.lines_quality(graph.used_connections,
                             graph.available_connections,
-                            graph.lines.trajectoryories)
+                            graph.lines.trajectories)
 
         return graph
 
