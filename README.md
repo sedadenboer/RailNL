@@ -42,6 +42,7 @@ To narrow down the problem and make the solution more realistic to real-life lin
 * A new connection is first being chosen from connections that are not yet represented in the line solution. If this is not possible, overlap in connections is allowed.
 * The first station of a trajectory is chosen from a list of stations with only one connection. If these are all used, the first station is chosen randomly.
 * Trajectory A-B-C is the same as C-B-A.
+* Give priority to unused connections.
 
 #### Randomise
 This algorithm picks a random first station and randomly picks a connection to go to the next station. It keeps adding connections to the trajectory as long as it remains within the constraints. It also starts a new trajectory if all connections from a station have already been ridden or if the only unused connection left leads to a station that has already been visited. For this algorithm there is an option of finding just one valid solution (with all connections ridden) or do multiple iterations to find a solution with the highest K for this sample (not all connections have to be ridden). Another option is to prioritize unused connections while making trajectories.
@@ -60,7 +61,7 @@ A restart is an extension to the Hill Climber algorithm which helps to avoid spe
 
 ## Structure of the repository
 * The program can be run with main.py and in output.csv the results are shown.
-* code filemap: files for the classes, algorithms, calculation of the state space and the visualisations.
+* code filemap: files for the classes, algorithms, the visualisations and user input.
 * data filemap: csv files containing connection and station data for North- and South-Holland and The Netherlands.
 * docs filemap: images of maps and visualisations of solutions.
 * plots: analysis of some algorithms.
